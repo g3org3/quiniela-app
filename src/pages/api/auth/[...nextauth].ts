@@ -1,11 +1,9 @@
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
+// import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import NextAuth, { type NextAuthOptions } from 'next-auth'
-import DiscordProvider from 'next-auth/providers/discord'
+// import DiscordProvider from 'next-auth/providers/discord'
 import GoogleProvider from 'next-auth/providers/google'
 
-// Prisma adapter for NextAuth, optional and can be removed
-import { env } from 'env/server.mjs'
-import { prisma } from 'server/db/client'
+// import { prisma } from 'server/db/client'
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET || !process.env.JWT_SECRET) {
   console.error('.env is not configured correctly')
@@ -24,7 +22,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   // Configure one or more authentication providers
-  adapter: PrismaAdapter(prisma),
+  // adapter: PrismaAdapter(prisma),
   secret: process.env.JWT_SECRET,
   providers: [
     GoogleProvider({
