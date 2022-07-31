@@ -17,6 +17,15 @@ const Tournaments = (_: Props) => {
   const toast = useToast()
   const { data, status } = useSession({ required: true })
   const tournaments = trpc.useQuery(['tournament.getAll'])
+  const toggleStatus = trpc.useMutation('tournament.toggle-status', {
+    onSuccess: () => {
+      invalidateQueries(['tournament.getAll'])
+      toast({ title: 'Updated', status: 'success' })
+    },
+    onError: (err) => {
+      Toast({ title: 'Something went wrong', description: err.message, status: 'error' })
+    },
+  })
   const del = trpc.useMutation('tournament.delete', {
     onSuccess: () => {
       invalidateQueries(['tournament.getAll'])
@@ -31,6 +40,7 @@ const Tournaments = (_: Props) => {
   if (data?.user.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
 
   const onClickDelete = (id: string) => () => del.mutate(id)
+  const onClickToggleStatus = (id: string) => () => toggleStatus.mutate(id)
 
   return (
     <>
@@ -78,10 +88,11 @@ const Tournaments = (_: Props) => {
                   {DateTime.fromJSDate(tournament.createdAt).toRelative()}
                 </Text>
                 <Button
-                  as={CustomLink}
                   variant="outline"
-                  colorScheme="blue"
-                  href={`/admin/tournaments/${tournament.id}`}
+                  colorScheme={tournament.status === 'BUILDING' ? 'green' : 'orange'}
+                  isLoading={toggleStatus.isLoading}
+                  disabled={toggleStatus.isLoading}
+                  onClick={onClickToggleStatus(tournament.id)}
                 >
                   {tournament.status === 'BUILDING' ? 'Activate' : 'Deactivate'}
                 </Button>

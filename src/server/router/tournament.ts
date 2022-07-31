@@ -25,6 +25,16 @@ export const tournamentRouter = createProtectedRouter()
       return ctx.prisma.tournament.delete({ where: { id: input } })
     },
   })
+  .mutation('toggle-status', {
+    input: z.string(),
+    resolve: async ({ ctx, input }) => {
+      isAdminOrThrow(ctx)
+      const tournament = await ctx.prisma.tournament.findFirstOrThrow({ where: { id: input } })
+      tournament.status = tournament.status === 'BUILDING' ? 'ACTIVE' : 'BUILDING'
+
+      return ctx.prisma.tournament.update({ data: tournament, where: { id: input } })
+    },
+  })
   .mutation('create', {
     input: z.string(),
     resolve: async ({ ctx, input }) => {
