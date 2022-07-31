@@ -10,10 +10,10 @@ const Home: NextPage = () => {
   const { data: session } = useSession()
 
   return (
-    <Layout>
+    <>
       <pre>{data ? data.greeting : 'loading...'}</pre>
       <pre>{JSON.stringify(session, null, 2)}</pre>
-    </Layout>
+    </>
   )
 }
 

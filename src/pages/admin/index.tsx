@@ -3,7 +3,6 @@ import { useSession } from 'next-auth/react'
 import { ChangeEventHandler, useState } from 'react'
 
 import CustomLink from 'components/CustomLink'
-import Layout from 'components/Layout'
 import Unauthorized from 'components/Unauthorized'
 import { trpc } from 'utils/trpc'
 
@@ -38,7 +37,7 @@ const Admin = (props: Props) => {
   }
 
   return (
-    <Layout>
+    <>
       <Flex flexDir="column" gap={4}>
         <Heading as="h1" fontWeight="light">
           Admin
@@ -71,7 +70,7 @@ const Admin = (props: Props) => {
           </Flex>
         </form>
       </Flex>
-    </Layout>
+    </>
   )
 }
 

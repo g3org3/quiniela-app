@@ -1,6 +1,5 @@
-import { CircularProgress, Flex, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 
-import Layout from 'components/Layout'
 import Show from 'components/Show'
 
 interface Props {
@@ -8,10 +7,10 @@ interface Props {
 }
 
 const Unauthorized = ({ isLoading }: Props) => (
-  <Layout>
+  <>
     <Flex h="68%" alignItems="center" justifyContent="center">
       <Flex>
-        <Show when={!isLoading} fallback={<CircularProgress isIndeterminate />}>
+        <Show when={!isLoading}>
           <>
             <Text borderRight="1px solid" mr="20px" pr="20px" fontSize="24px" fontWeight="500">
               403
@@ -23,7 +22,7 @@ const Unauthorized = ({ isLoading }: Props) => (
         </Show>
       </Flex>
     </Flex>
-  </Layout>
+  </>
 )
 
 export default Unauthorized

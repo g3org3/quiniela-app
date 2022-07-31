@@ -1,8 +1,7 @@
-import { Flex, Heading, Link, Skeleton, Text } from '@chakra-ui/react'
+import { Button, Flex, Heading, Link, Skeleton, Text, Toast, useToast } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import { useSession } from 'next-auth/react'
 
-import Layout from 'components/Layout'
 import Unauthorized from 'components/Unauthorized'
 import { trpc } from 'utils/trpc'
 
@@ -10,15 +9,28 @@ interface Props {
   //
 }
 
-const Tournaments = (props: Props) => {
+const Tournaments = (_: Props) => {
+  const { invalidateQueries } = trpc.useContext()
+  const toast = useToast()
   const { data, status } = useSession({ required: true })
   const tournaments = trpc.useQuery(['tournament.getAll'])
+  const del = trpc.useMutation('tournament.delete', {
+    onSuccess: () => {
+      invalidateQueries(['tournament.getAll'])
+      toast({ title: 'Deleted', status: 'success' })
+    },
+    onError: (err) => {
+      Toast({ title: 'Something went wrong', description: err.message, status: 'error' })
+    },
+  })
 
   // @ts-ignore
   if (data?.user.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
 
+  const onClickDelete = (id: string) => () => del.mutate(id)
+
   return (
-    <Layout>
+    <>
       <Flex flexDir="column" gap={4}>
         <Heading as="h1" fontWeight="light">
           <Link href="/admin">Admin</Link> / Tournaments
@@ -30,7 +42,7 @@ const Tournaments = (props: Props) => {
           w={tournaments.isLoading ? '300px' : undefined}
           boxShadow={tournaments.isLoading ? 'md' : undefined}
         >
-          <Flex gap={5}>
+          <Flex gap={5} flexWrap="wrap">
             {tournaments.data?.map((tournament) => (
               <Flex key={tournament.id} flexDir="column" gap={2} boxShadow="md" w="300px" p={6}>
                 <Heading as="h2" fontWeight="normal" size="md">
@@ -40,12 +52,22 @@ const Tournaments = (props: Props) => {
                 <Text title={DateTime.fromJSDate(tournament.createdAt).toFormat('yyyy-MM-dd HH:mm')}>
                   {DateTime.fromJSDate(tournament.createdAt).toRelative()}
                 </Text>
+                <Button
+                  disabled={del.isLoading}
+                  isLoading={del.isLoading}
+                  onClick={onClickDelete(tournament.id)}
+                  colorScheme="red"
+                  variant="outline"
+                  size="sm"
+                >
+                  delete
+                </Button>
               </Flex>
             ))}
           </Flex>
         </Skeleton>
       </Flex>
-    </Layout>
+    </>
   )
 }
 

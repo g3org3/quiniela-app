@@ -15,8 +15,6 @@ import {
 import { useSession } from 'next-auth/react'
 import NextLink from 'next/link'
 
-import Layout from 'components/Layout'
-
 interface Props {
   //
 }
@@ -26,7 +24,7 @@ const Account = (_: Props) => {
   if (!data?.user) return null
 
   return (
-    <Layout>
+    <>
       <Flex alignItems="center" gap={4}>
         <Avatar src={data.user.image || undefined} size="lg">
           <AvatarBadge boxSize="1.25em" bg="green.300" />
@@ -54,7 +52,7 @@ const Account = (_: Props) => {
           <Input disabled name="email" value={data.user.email || undefined} />
         </InputGroup>
       </Flex>
-    </Layout>
+    </>
   )
 }
 
