@@ -97,9 +97,9 @@ const Tournaments = (_: Props) => {
       <Flex flexDir="column" gap={4}>
         <Heading as="h1" fontWeight="light">
           <NextLink href="/admin" passHref>
-            <Link>Admin</Link>
+            <Link>Ad</Link>
           </NextLink>{' '}
-          / <CustomLink href="/admin/tournaments">T</CustomLink> /{' '}
+          / <CustomLink href="/admin/tournaments">To</CustomLink> /{' '}
           <Skeleton display="inline-block" isLoaded={!isLoading}>
             {tournament?.name}
           </Skeleton>
