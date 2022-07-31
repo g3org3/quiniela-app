@@ -1,32 +1,26 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { createRouter } from './context'
+import { createProtectedRouter, isAdminOrThrow } from './protected-router'
 
-export const tournamentRouter = createRouter()
+export const tournamentRouter = createProtectedRouter()
   .query('getAll', {
     async resolve({ ctx }) {
-      if (!ctx.session?.user?.id) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' })
-      }
-      // @ts-ignore
-      if (ctx.session.user.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN' })
-      }
+      isAdminOrThrow(ctx)
 
       return await ctx.prisma.tournament.findMany({ include: { User: true } })
+    },
+  })
+  .query('getOne', {
+    input: z.string(),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.tournament.findUnique({ include: { User: true }, where: { id: input } })
     },
   })
   .mutation('delete', {
     input: z.string(),
     resolve: async ({ ctx, input }) => {
-      if (!ctx.session?.user?.id) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' })
-      }
-      // @ts-ignore
-      if (ctx.session.user.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN' })
-      }
+      isAdminOrThrow(ctx)
 
       return ctx.prisma.tournament.delete({ where: { id: input } })
     },
@@ -34,14 +28,8 @@ export const tournamentRouter = createRouter()
   .mutation('create', {
     input: z.string(),
     resolve: async ({ ctx, input }) => {
-      if (!ctx.session?.user?.id) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' })
-      }
-      // @ts-ignore
-      if (ctx.session.user.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN' })
-      }
+      const userId = isAdminOrThrow(ctx)
 
-      return ctx.prisma.tournament.create({ data: { name: input, userId: ctx.session.user.id } })
+      return ctx.prisma.tournament.create({ data: { name: input, userId } })
     },
   })

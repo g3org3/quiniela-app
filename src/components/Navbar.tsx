@@ -12,8 +12,11 @@ import {
   Spacer,
   Text,
   AvatarBadge,
+  Badge,
+  Link,
 } from '@chakra-ui/react'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import NextLink from 'next/link'
 
 import CustomLink from 'components/CustomLink'
 import Logo from 'components/Logo'
@@ -33,6 +36,14 @@ const Navbar = (_: Props) => {
         <Button as={CustomLink} href="/" variant="ghost" display="flex" gap={2}>
           <Logo />
           <Text>Quiniela</Text>
+          {/* @ts-ignore */}
+          <Show when={data?.user.role === 'ADMIN'} fallback={<Badge colorScheme="yellow">beta</Badge>}>
+            <NextLink href="/admin" passHref>
+              <Link>
+                <Badge colorScheme="purple">admin</Badge>
+              </Link>
+            </NextLink>
+          </Show>
         </Button>
         <Spacer />
         <Show

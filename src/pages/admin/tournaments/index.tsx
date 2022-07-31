@@ -1,7 +1,9 @@
 import { Button, Flex, Heading, Link, Skeleton, Text, Toast, useToast } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import { useSession } from 'next-auth/react'
+import NextLink from 'next/link'
 
+import CustomLink from 'components/CustomLink'
 import Unauthorized from 'components/Unauthorized'
 import { trpc } from 'utils/trpc'
 
@@ -33,18 +35,28 @@ const Tournaments = (_: Props) => {
     <>
       <Flex flexDir="column" gap={4}>
         <Heading as="h1" fontWeight="light">
-          <Link href="/admin">Admin</Link> / Tournaments
+          <NextLink href="/admin" passHref>
+            <Link>Admin</Link>
+          </NextLink>{' '}
+          / Tournaments
         </Heading>
         <hr />
         <Skeleton
           isLoaded={!tournaments.isLoading}
-          h={tournaments.isLoading ? '128px' : undefined}
+          h={tournaments.isLoading ? '176px' : undefined}
           w={tournaments.isLoading ? '300px' : undefined}
           boxShadow={tournaments.isLoading ? 'md' : undefined}
         >
           <Flex gap={5} flexWrap="wrap">
             {tournaments.data?.map((tournament) => (
-              <Flex key={tournament.id} flexDir="column" gap={2} boxShadow="md" w="300px" p={6}>
+              <Flex
+                key={tournament.id}
+                flexDir="column"
+                gap={2}
+                boxShadow="md"
+                w={{ base: '100%', md: '300px' }}
+                p={6}
+              >
                 <Heading as="h2" fontWeight="normal" size="md">
                   {tournament.name}
                 </Heading>
@@ -53,6 +65,15 @@ const Tournaments = (_: Props) => {
                   {DateTime.fromJSDate(tournament.createdAt).toRelative()}
                 </Text>
                 <Button
+                  as={CustomLink}
+                  variant="outline"
+                  colorScheme="purple"
+                  href={`/admin/tournaments/${tournament.id}`}
+                >
+                  View
+                </Button>
+                <Button
+                  mt={4}
                   disabled={del.isLoading}
                   isLoading={del.isLoading}
                   onClick={onClickDelete(tournament.id)}
@@ -60,7 +81,7 @@ const Tournaments = (_: Props) => {
                   variant="outline"
                   size="sm"
                 >
-                  delete
+                  DELETE
                 </Button>
               </Flex>
             ))}

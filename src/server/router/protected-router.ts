@@ -1,4 +1,5 @@
 import * as trpc from '@trpc/server'
+import { TRPCError } from '@trpc/server'
 
 import { createRouter } from './context'
 
@@ -19,4 +20,12 @@ export function createProtectedRouter() {
       },
     })
   })
+}
+
+export function isAdminOrThrow(ctx: any) {
+  if (ctx.session.user.role !== 'ADMIN') {
+    throw new TRPCError({ code: 'FORBIDDEN' })
+  }
+
+  return ctx.session.user.id as string
 }

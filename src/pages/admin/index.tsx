@@ -14,7 +14,7 @@ const Admin = (props: Props) => {
   const { data, status } = useSession({ required: true })
   const [name, setName] = useState<string>('')
   const toast = useToast()
-  const tournament = trpc.useMutation('tournament.create', {
+  const createTournament = trpc.useMutation('tournament.create', {
     onSuccess: () => {
       toast({ title: `"${name}" created`, status: 'success' })
       setName('')
@@ -28,12 +28,12 @@ const Admin = (props: Props) => {
 
   const onChangeTournamentName: ChangeEventHandler<HTMLInputElement> = ({ target }) => setName(target.value)
 
-  const isFormDisabled = !name.trim() || tournament.isLoading
+  const isFormDisabled = !name.trim() || createTournament.isLoading
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
     if (isFormDisabled) return
-    tournament.mutate(name)
+    createTournament.mutate(name)
   }
 
   return (
@@ -44,19 +44,19 @@ const Admin = (props: Props) => {
         </Heading>
         <hr />
         <form onSubmit={onSubmit}>
-          <Flex flexDir="column" gap={2} boxShadow="md" maxW="300px" p={10}>
+          <Flex flexDir="column" gap={2} boxShadow="md" maxW={{ base: '100%', md: '300px' }} p={10}>
             <Heading as="h2" fontWeight="normal" size="md">
               Create Tournament
             </Heading>
             <Input
-              disabled={tournament.isLoading}
+              disabled={createTournament.isLoading}
               name="name"
               placeholder="tournament name"
               value={name}
               onChange={onChangeTournamentName}
             />
             <Button
-              isLoading={tournament.isLoading}
+              isLoading={createTournament.isLoading}
               type="submit"
               colorScheme="purple"
               disabled={isFormDisabled}

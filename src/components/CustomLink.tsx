@@ -2,7 +2,7 @@ import { Link } from '@chakra-ui/react'
 import NextLink from 'next/link'
 
 interface Props {
-  children: JSX.Element[]
+  children: JSX.Element[] | string
   href: string
 }
 

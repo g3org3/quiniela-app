@@ -50,16 +50,18 @@ enum MatchStatus {
 
 model Match {
     id            String      @id @default(cuid())
-    datetimeUTC   DateTime
+    startsAt      DateTime
     location      String?
-    HomeTeam      String
-    AwayTeam      String
+    homeTeam      String
+    awayTeam      String
     phase         String?
     status        MatchStatus @default(WAITING)
-    HomeTeamScore Int         @default(0)
-    AwayTeamScore Int         @default(0)
+    homeTeamScore Int         @default(0)
+    awayTeamScore Int         @default(0)
     Tournament    Tournament  @relation(fields: [tournamentId], references: [id])
     tournamentId  String
+    User          User?       @relation(fields: [userId], references: [id])
+    userId        String?
 }
 
 model Tournament {
@@ -87,6 +89,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     tournaments   Tournament[]
+    matches       Match[]
 }
 
 model VerificationToken {
