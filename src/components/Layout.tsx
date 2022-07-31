@@ -1,4 +1,4 @@
-import { Container } from '@chakra-ui/react'
+import { Container, Flex } from '@chakra-ui/react'
 import Head from 'next/head'
 
 import Navbar from 'components/Navbar'
@@ -15,10 +15,12 @@ const Layout = ({ children }: Props) => {
         <meta name="description" content="Quiniela" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
-      <Container maxW="container.xl" pt={4}>
-        {children}
-      </Container>
+      <Flex flexDir="column" h="100vh">
+        <Navbar />
+        <Container maxW="container.xl" py={4} flex="1" overflow="auto">
+          {children}
+        </Container>
+      </Flex>
     </>
   )
 }

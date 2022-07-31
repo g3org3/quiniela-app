@@ -2,16 +2,18 @@ import { CopyIcon } from '@chakra-ui/icons'
 import {
   Avatar,
   AvatarBadge,
+  Badge,
   Flex,
   Heading,
+  Link,
   Icon,
   IconButton,
   Input,
   InputGroup,
   InputLeftAddon,
-  Text,
 } from '@chakra-ui/react'
 import { useSession } from 'next-auth/react'
+import NextLink from 'next/link'
 
 import Layout from 'components/Layout'
 
@@ -30,7 +32,14 @@ const Account = (_: Props) => {
           <AvatarBadge boxSize="1.25em" bg="green.300" />
         </Avatar>
         <Heading as="h2" fontWeight="light">
-          {data.user.name}
+          <Flex gap={4} alignItems="center">
+            {data.user.name}
+            <NextLink href="/admin" passHref>
+              <Link>
+                <Badge colorScheme="purple">admin</Badge>
+              </Link>
+            </NextLink>
+          </Flex>
           <Flex as="small" fontFamily="monospace" fontSize="16px" gap={2} alignItems="center">
             <IconButton aria-label="copy" size="xs">
               <Icon as={CopyIcon} />

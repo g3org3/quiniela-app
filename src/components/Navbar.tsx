@@ -1,11 +1,10 @@
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Avatar,
   Button,
   Container,
   Flex,
-  IconButton,
   Menu,
-  Link,
   MenuButton,
   MenuDivider,
   MenuItem,
@@ -15,25 +14,12 @@ import {
   AvatarBadge,
 } from '@chakra-ui/react'
 import { useSession, signIn, signOut } from 'next-auth/react'
-import NextLink from 'next/link'
+
+import CustomLink from 'components/CustomLink'
+import Logo from 'components/Logo'
+import Show from 'components/Show'
 
 interface Props {}
-
-const Logo = () => <Flex h="30px" w="30px" bg="black" borderRadius="10px"></Flex>
-
-const Show: React.FC<{ when: boolean; children: JSX.Element; fallback?: JSX.Element }> = ({
-  when,
-  children,
-  fallback,
-}) => (when ? children : fallback || null)
-
-const CustomLink: React.FC<{ children: JSX.Element[]; href: string }> = ({ children, href, ...props }) => {
-  return (
-    <NextLink href={href} passHref>
-      <Link {...props}>{children}</Link>
-    </NextLink>
-  )
-}
 
 const Navbar = (_: Props) => {
   const { data, status } = useSession()
@@ -42,7 +28,7 @@ const Navbar = (_: Props) => {
   const onClickLogout = () => signOut()
 
   return (
-    <Flex boxShadow="md" h="64px">
+    <Flex boxShadow="sm" h="64px">
       <Container maxW="container.xl" display="flex" alignItems="center">
         <Button as={CustomLink} href="/" variant="ghost" display="flex" gap={2}>
           <Logo />
@@ -58,7 +44,7 @@ const Navbar = (_: Props) => {
           }
         >
           <Menu>
-            <MenuButton as={Button} variant="ghost">
+            <MenuButton as={Button} variant="ghost" rightIcon={<ChevronDownIcon />}>
               <Flex alignItems="center" gap={2}>
                 <Avatar name={data?.user?.name || undefined} src={data?.user?.image || undefined} size="sm">
                   <AvatarBadge boxSize="1em" bg="green.300" />
@@ -69,9 +55,6 @@ const Navbar = (_: Props) => {
             <MenuList>
               <MenuItem as={CustomLink} href="/account">
                 Account
-              </MenuItem>
-              <MenuItem as={CustomLink} href="/admin">
-                Admin
               </MenuItem>
               <MenuDivider />
               <MenuItem onClick={onClickLogout}>Logout</MenuItem>

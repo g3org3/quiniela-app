@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session({ session, user }) {
       if (session.user) {
-        session.user.id = user.id
+        session.user = user
       }
 
       return session
