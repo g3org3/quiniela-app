@@ -27,8 +27,8 @@ interface Props {}
 const Navbar = (_: Props) => {
   const { data, status } = useSession()
   const isAuthenticated = !!data && status === 'authenticated'
-  const onClickLogin = () => signIn()
-  const onClickLogout = () => signOut()
+  const onClickLogin = () => signIn('google')
+  const onClickLogout = () => signOut({ callbackUrl: '/' })
 
   return (
     <Flex boxShadow="sm" h="64px">

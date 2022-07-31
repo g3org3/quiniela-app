@@ -10,7 +10,7 @@ interface Props {
   //
 }
 
-const Admin = (props: Props) => {
+const Admin = (_: Props) => {
   const { data, status } = useSession({ required: true })
   const [name, setName] = useState<string>('')
   const toast = useToast()

@@ -17,7 +17,7 @@ const Layout = ({ children }: Props) => {
       </Head>
       <Flex flexDir="column" h="100vh">
         <Navbar />
-        <Container maxW="container.xl" py={4} flex="1" overflow="auto">
+        <Container maxW="container.xl" my={4} flex="1" overflow="auto">
           {children}
         </Container>
       </Flex>

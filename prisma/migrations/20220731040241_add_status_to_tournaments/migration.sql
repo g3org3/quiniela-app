@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Tournament` ADD COLUMN `status` ENUM('BUILDING', 'ACTIVE') NOT NULL DEFAULT 'BUILDING';
