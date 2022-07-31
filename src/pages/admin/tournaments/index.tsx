@@ -20,19 +20,29 @@ const Tournaments = (_: Props) => {
   const toggleStatus = trpc.useMutation('tournament.toggle-status', {
     onSuccess: () => {
       invalidateQueries(['tournament.getAll'])
-      toast({ title: 'Updated', status: 'success' })
+      toast({ variant: 'left-accent', title: 'Updated', status: 'success' })
     },
     onError: (err) => {
-      Toast({ title: 'Something went wrong', description: err.message, status: 'error' })
+      toast({
+        variant: 'left-accent',
+        title: 'Something went wrong',
+        description: err.message,
+        status: 'error',
+      })
     },
   })
   const del = trpc.useMutation('tournament.delete', {
     onSuccess: () => {
       invalidateQueries(['tournament.getAll'])
-      toast({ title: 'Deleted', status: 'success' })
+      toast({ variant: 'left-accent', title: 'Deleted', status: 'success' })
     },
     onError: (err) => {
-      Toast({ title: 'Something went wrong', description: err.message, status: 'error' })
+      toast({
+        variant: 'left-accent',
+        title: 'Something went wrong',
+        description: err.message,
+        status: 'error',
+      })
     },
   })
 

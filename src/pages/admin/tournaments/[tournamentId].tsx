@@ -54,11 +54,16 @@ const Tournaments = (_: Props) => {
   const createMatch = trpc.useMutation('match.create', {
     onSuccess() {
       invalidateQueries(['match.getAllByTournamentId'])
-      toast({ title: 'Match created!', status: 'success' })
+      toast({ variant: 'left-accent', title: 'Match created!', status: 'success' })
       clearForm()
     },
     onError(err) {
-      toast({ title: 'Something went wrong', status: 'error', description: err.message })
+      toast({
+        variant: 'left-accent',
+        title: 'Something went wrong',
+        status: 'error',
+        description: err.message,
+      })
     },
   })
 

@@ -17,10 +17,15 @@ const Matches = (_: Props) => {
   const delMatch = trpc.useMutation('match.delete', {
     onSuccess: () => {
       invalidateQueries(['match.getAllByTournamentId'])
-      toast({ title: 'Deleted', status: 'success' })
+      toast({ variant: 'left-accent', title: 'Deleted', status: 'success' })
     },
     onError: (err) => {
-      toast({ title: 'Something went wrong', description: err.message, status: 'error' })
+      toast({
+        variant: 'left-accent',
+        title: 'Something went wrong',
+        description: err.message,
+        status: 'error',
+      })
     },
   })
   const onClickDel = (id: string) => () => delMatch.mutate(id)
