@@ -1,4 +1,4 @@
-import { Button, Select, Table, Tbody, Td, Th, Thead, Tr, useToast } from '@chakra-ui/react'
+import { Button, Flex, Image, Input, Spacer, useToast } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 
 import { trpc } from 'utils/trpc'
@@ -19,38 +19,28 @@ const Matches = ({ tournamentId, isAdmin }: Props) => {
 
   return (
     <>
-      <Select>
-        <option value="">-</option>
-        {phases.map((phase) => (
-          <option key={phase}>{phase}</option>
+      <Flex flexWrap="wrap" gap={5}>
+        {matches.data?.map((match) => (
+          <Flex key={match.id} p={3} boxShadow="md" flexDir="column" gap={2}>
+            <Flex gap={2}>
+              <Flex w="50%" flexDir="column" alignItems="flex-start">
+                <Image alt="flag" height="50px" fallbackSrc="https://via.placeholder.com/50" />
+                {match.homeTeam}
+                <Input size="sm" type="number" />
+              </Flex>
+              <Flex w="50%" flexDir="column" alignItems="flex-start">
+                <Image alt="flag" height="50px" fallbackSrc="https://via.placeholder.com/50" />
+                {match.awayTeam}
+                <Input size="sm" type="number" />
+              </Flex>
+            </Flex>
+            <Flex>
+              {match.location} <Spacer />
+              {DateTime.fromJSDate(match.startsAt).toRelative()}
+            </Flex>
+          </Flex>
         ))}
-      </Select>
-      <Table>
-        <Thead>
-          <Tr>
-            <Th>home</Th>
-            <Th>away</Th>
-            <Th>match date</Th>
-            <Th>status</Th>
-            <Th>action</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {matches.data?.map((match) => (
-            <Tr key={match.id}>
-              <Td>{match.homeTeam}</Td>
-              <Td>{match.awayTeam}</Td>
-              <Td>{DateTime.fromJSDate(match.startsAt).toRelative()}</Td>
-              <Td>{match.location}</Td>
-              <Td>
-                <Button colorScheme="purple" variant="outline" size="sm">
-                  bet
-                </Button>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+      </Flex>
     </>
   )
 }
