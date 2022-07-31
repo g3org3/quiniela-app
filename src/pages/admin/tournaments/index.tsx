@@ -85,6 +85,11 @@ const Tournaments = (_: Props) => {
                   <Badge borderRadius="5px" colorScheme={tournament.status === 'BUILDING' ? 'blue' : 'green'}>
                     {tournament.status}
                   </Badge>
+                  {tournament.isRace && (
+                    <Badge borderRadius="5px" colorScheme="yellow">
+                      race
+                    </Badge>
+                  )}
                 </Heading>
                 <Flex alignItems="center" gap={2}>
                   <Avatar
@@ -110,7 +115,7 @@ const Tournaments = (_: Props) => {
                   as={CustomLink}
                   variant="outline"
                   colorScheme="purple"
-                  href={`/admin/tournaments/${tournament.id}`}
+                  href={`/admin/tournaments/${tournament.id}${tournament.isRace ? '/race' : ''}`}
                 >
                   View
                 </Button>
