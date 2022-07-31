@@ -11,6 +11,11 @@ export const tournamentRouter = createProtectedRouter()
       return await ctx.prisma.tournament.findMany({ include: { User: true } })
     },
   })
+  .query('getAllActive', {
+    async resolve({ ctx }) {
+      return await ctx.prisma.tournament.findMany({ include: { User: true }, where: { status: 'ACTIVE' } })
+    },
+  })
   .query('getOne', {
     input: z.string(),
     async resolve({ ctx, input }) {
@@ -34,6 +39,19 @@ export const tournamentRouter = createProtectedRouter()
       isAdminOrThrow(ctx)
       const tournament = await ctx.prisma.tournament.findFirstOrThrow({ where: { id } })
       tournament.name = name
+
+      return ctx.prisma.tournament.update({ data: tournament, where: { id } })
+    },
+  })
+  .mutation('update-image', {
+    input: z.object({
+      id: z.string(),
+      image: z.string(),
+    }),
+    resolve: async ({ ctx, input: { id, image } }) => {
+      isAdminOrThrow(ctx)
+      const tournament = await ctx.prisma.tournament.findFirstOrThrow({ where: { id } })
+      tournament.image = image
 
       return ctx.prisma.tournament.update({ data: tournament, where: { id } })
     },

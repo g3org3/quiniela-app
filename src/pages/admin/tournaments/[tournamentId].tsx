@@ -5,6 +5,7 @@ import {
   EditablePreview,
   Flex,
   Heading,
+  Image,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -12,6 +13,7 @@ import {
   Skeleton,
   Spinner,
   useToast,
+  Text,
 } from '@chakra-ui/react'
 import { useSession } from 'next-auth/react'
 import NextLink from 'next/link'
@@ -53,6 +55,20 @@ const Tournaments = (_: Props) => {
       })
     },
   })
+  const updateTournamentImage = trpc.useMutation('tournament.update-image', {
+    onSuccess: () => {
+      invalidateQueries(['tournament.getOne'])
+      toast({ variant: 'left-accent', title: 'Updated', status: 'success' })
+    },
+    onError: (err) => {
+      toast({
+        variant: 'left-accent',
+        title: 'Something went wrong',
+        description: err.message,
+        status: 'error',
+      })
+    },
+  })
 
   const setterByField = {
     homeTeam: setHomeTeam,
@@ -64,6 +80,10 @@ const Tournaments = (_: Props) => {
 
   const onChangeTitle: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     updateTournamentTitle.mutate({ id: tournamentId as string, name: e.target.value })
+  }
+  const onChangeImage: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (e.target.value === 'click me') return
+    updateTournamentImage.mutate({ id: tournamentId as string, image: e.target.value })
   }
 
   const clearForm = () => {
@@ -136,77 +156,97 @@ const Tournaments = (_: Props) => {
           </Skeleton>
         </Heading>
         <hr />
-        <form onSubmit={onSubmit}>
-          <Flex flexDir="column" gap={4} boxShadow="md" maxW={{ base: '100%', md: '68%' }} p={10}>
-            <Heading as="h2" fontWeight="normal" size="md">
-              Create Match
-            </Heading>
-            <Flex gap={2} alignItems="center">
-              <InputGroup>
-                <InputLeftAddon>homeTeam</InputLeftAddon>
-                <Input
-                  value={homeTeam}
-                  disabled={createMatch.isLoading}
-                  onChange={onValueChange('homeTeam')}
-                  name="homeTeam"
-                  placeholder="homeTeam"
-                />
-              </InputGroup>
-              vs
-              <InputGroup>
-                <InputLeftAddon>awayTeam</InputLeftAddon>
-                <Input
-                  value={awayTeam}
-                  disabled={createMatch.isLoading}
-                  onChange={onValueChange('awayTeam')}
-                  name="awayTeam"
-                  placeholder="awayTeam"
-                />
-              </InputGroup>
-            </Flex>
-            <InputGroup>
-              <InputLeftAddon>location</InputLeftAddon>
-              <Input
-                value={location}
-                disabled={createMatch.isLoading}
-                onChange={onValueChange('location')}
-                name="location"
-                placeholder="location"
+        <Skeleton isLoaded={!updateTournamentImage.isLoading && !isLoading}>
+          <Editable
+            isDisabled={updateTournamentImage.isLoading}
+            defaultValue={tournament?.image || 'click me'}
+          >
+            <EditablePreview color={updateTournamentImage.isLoading ? 'purple' : undefined} />
+            <EditableInput onBlur={onChangeImage} />
+          </Editable>
+        </Skeleton>
+        <Flex gap={4}>
+          <Flex w="32%" flexDir="column" gap={8}>
+            <Skeleton isLoaded={!updateTournamentImage.isLoading && !isLoading}>
+              <Image
+                alt="tournament image"
+                fallbackSrc="https://via.placeholder.com/200"
+                src={tournament?.image || undefined}
               />
-            </InputGroup>
-            <Flex gap={4}>
-              <InputGroup>
-                <InputLeftAddon>phase</InputLeftAddon>
-                <Input
-                  value={phase}
-                  disabled={createMatch.isLoading}
-                  onChange={onValueChange('phase')}
-                  name="phase"
-                  placeholder="phase"
-                />
-              </InputGroup>
-              <InputGroup>
-                <InputLeftAddon>startsAt</InputLeftAddon>
-                <Input
-                  value={startsAt}
-                  disabled={createMatch.isLoading}
-                  onChange={onValueChange('startsAt')}
-                  name="startsAt"
-                  placeholder="startsAt"
-                  type="datetime-local"
-                />
-              </InputGroup>
-            </Flex>
-            <Button
-              isLoading={createMatch.isLoading}
-              disabled={isFormDisabled}
-              type="submit"
-              colorScheme="purple"
-            >
-              create
-            </Button>
+            </Skeleton>
           </Flex>
-        </form>
+          <form onSubmit={onSubmit} style={{ flex: 1 }}>
+            <Flex flexDir="column" gap={4} boxShadow="md" p={10}>
+              <Heading as="h2" fontWeight="normal" size="md">
+                Create Match
+              </Heading>
+              <Flex gap={2} alignItems="center">
+                <InputGroup>
+                  <InputLeftAddon>homeTeam</InputLeftAddon>
+                  <Input
+                    value={homeTeam}
+                    disabled={createMatch.isLoading}
+                    onChange={onValueChange('homeTeam')}
+                    name="homeTeam"
+                    placeholder="homeTeam"
+                  />
+                </InputGroup>
+                vs
+                <InputGroup>
+                  <InputLeftAddon>awayTeam</InputLeftAddon>
+                  <Input
+                    value={awayTeam}
+                    disabled={createMatch.isLoading}
+                    onChange={onValueChange('awayTeam')}
+                    name="awayTeam"
+                    placeholder="awayTeam"
+                  />
+                </InputGroup>
+              </Flex>
+              <InputGroup>
+                <InputLeftAddon>location</InputLeftAddon>
+                <Input
+                  value={location}
+                  disabled={createMatch.isLoading}
+                  onChange={onValueChange('location')}
+                  name="location"
+                  placeholder="location"
+                />
+              </InputGroup>
+              <Flex gap={4}>
+                <InputGroup>
+                  <InputLeftAddon>phase</InputLeftAddon>
+                  <Input
+                    value={phase}
+                    disabled={createMatch.isLoading}
+                    onChange={onValueChange('phase')}
+                    name="phase"
+                    placeholder="phase"
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <InputLeftAddon>startsAt</InputLeftAddon>
+                  <Input
+                    value={startsAt}
+                    disabled={createMatch.isLoading}
+                    onChange={onValueChange('startsAt')}
+                    name="startsAt"
+                    placeholder="startsAt"
+                    type="datetime-local"
+                  />
+                </InputGroup>
+              </Flex>
+              <Button
+                isLoading={createMatch.isLoading}
+                disabled={isFormDisabled}
+                type="submit"
+                colorScheme="purple"
+              >
+                create
+              </Button>
+            </Flex>
+          </form>
+        </Flex>
         <Matches />
       </Flex>
     </>
