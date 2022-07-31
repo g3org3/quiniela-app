@@ -1,5 +1,8 @@
 import {
   Button,
+  Editable,
+  EditableInput,
+  EditablePreview,
   Flex,
   Heading,
   Input,
@@ -8,6 +11,7 @@ import {
   Link,
   Skeleton,
   SkeletonText,
+  Spinner,
   Text,
   Toast,
   useToast,
@@ -38,6 +42,21 @@ const Tournaments = (_: Props) => {
   const toast = useToast()
   const { tournamentId } = router.query
   const { data: tournament, isLoading } = trpc.useQuery(['tournament.getOne', tournamentId as string])
+  const updateTournamentTitle = trpc.useMutation('tournament.rename', {
+    onSuccess: () => {
+      invalidateQueries(['tournament.getOne'])
+      toast({ variant: 'left-accent', title: 'Renamed', status: 'success' })
+    },
+    onError: (err) => {
+      toast({
+        variant: 'left-accent',
+        title: 'Something went wrong',
+        description: err.message,
+        status: 'error',
+      })
+    },
+  })
+
   const setterByField = {
     homeTeam: setHomeTeam,
     awayTeam: setAwayTeam,
@@ -45,12 +64,18 @@ const Tournaments = (_: Props) => {
     phase: setPhase,
     startsAt: setStartsAt,
   }
+
+  const onChangeTitle: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    updateTournamentTitle.mutate({ id: tournamentId as string, name: e.target.value })
+  }
+
   const clearForm = () => {
     Object.keys(setterByField).forEach((field) => {
       // @ts-ignore
       setterByField[field]('')
     })
   }
+
   const createMatch = trpc.useMutation('match.create', {
     onSuccess() {
       invalidateQueries(['match.getAllByTournamentId'])
@@ -99,14 +124,18 @@ const Tournaments = (_: Props) => {
 
   return (
     <>
-      <Flex flexDir="column" gap={4}>
+      <Flex flexDir="column" gap={4} pt={2}>
         <Heading as="h1" fontWeight="light">
           <NextLink href="/admin" passHref>
             <Link>Ad</Link>
           </NextLink>{' '}
           / <CustomLink href="/admin/tournaments">To</CustomLink> /{' '}
-          <Skeleton display="inline-block" isLoaded={!isLoading}>
-            {tournament?.name}
+          <Skeleton display="inline-flex" isLoaded={!isLoading} alignItems="center" gap={2}>
+            <Editable isDisabled={updateTournamentTitle.isLoading} defaultValue={tournament?.name}>
+              <EditablePreview color={updateTournamentTitle.isLoading ? 'purple' : undefined} />
+              <EditableInput onBlur={onChangeTitle} />
+            </Editable>
+            {updateTournamentTitle.isLoading && <Spinner />}
           </Skeleton>
         </Heading>
         <hr />

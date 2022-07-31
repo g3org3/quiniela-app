@@ -34,15 +34,17 @@ const Matches = (_: Props) => {
     <>
       <Table>
         <Thead>
-          <Th>home</Th>
-          <Th>score</Th>
-          <Th>away</Th>
-          <Th>score</Th>
-          <Th>start at</Th>
-          <Th>status</Th>
-          <Th>location</Th>
-          <Th>phase</Th>
-          <Th>Delete</Th>
+          <Tr>
+            <Th>home</Th>
+            <Th>score</Th>
+            <Th>away</Th>
+            <Th>score</Th>
+            <Th>start at</Th>
+            <Th>status</Th>
+            <Th>location</Th>
+            <Th>phase</Th>
+            <Th>Delete</Th>
+          </Tr>
         </Thead>
         <Tbody>
           {matches.data?.map((match) => (
