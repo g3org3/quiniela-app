@@ -8,7 +8,10 @@ export const tournamentRouter = createProtectedRouter()
     async resolve({ ctx }) {
       isAdminOrThrow(ctx)
 
-      return await ctx.prisma.tournament.findMany({ include: { User: true } })
+      return await ctx.prisma.tournament.findMany({
+        include: { User: true },
+        orderBy: { status: 'asc' },
+      })
     },
   })
   .query('getAllActive', {
