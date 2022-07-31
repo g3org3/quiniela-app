@@ -1,75 +1,50 @@
-import { Button, Table, Tbody, Td, Th, Thead, Tr, useToast } from '@chakra-ui/react'
+import { Button, Select, Table, Tbody, Td, Th, Thead, Tr, useToast } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
-import { useRouter } from 'next/router'
 
 import { trpc } from 'utils/trpc'
 
 interface Props {
-  //
+  tournamentId: string
+  isAdmin?: boolean
 }
 
-const Matches = (_: Props) => {
-  const router = useRouter()
-  const { tournamentId } = router.query
+const Matches = ({ tournamentId, isAdmin }: Props) => {
   const { invalidateQueries } = trpc.useContext()
   const toast = useToast()
-  const matches = trpc.useQuery(['match.getAllByTournamentId', tournamentId as string])
-  const delMatch = trpc.useMutation('match.delete', {
-    onSuccess: () => {
-      invalidateQueries(['match.getAllByTournamentId'])
-      toast({ variant: 'left-accent', title: 'Deleted', status: 'success' })
-    },
-    onError: (err) => {
-      toast({
-        variant: 'left-accent',
-        title: 'Something went wrong',
-        description: err.message,
-        status: 'error',
-      })
-    },
-  })
-  const onClickDel = (id: string) => () => delMatch.mutate(id)
+  const matches = trpc.useQuery(['match.getAllByTournamentId', tournamentId])
+
+  const phases = matches.data
+    ? Array.from(new Set(matches.data.map((match) => match.phase).filter(Boolean))).sort()
+    : []
 
   return (
     <>
+      <Select>
+        <option value="">-</option>
+        {phases.map((phase) => (
+          <option key={phase}>{phase}</option>
+        ))}
+      </Select>
       <Table>
         <Thead>
           <Tr>
             <Th>home</Th>
-            <Th>score</Th>
             <Th>away</Th>
-            <Th>score</Th>
-            <Th>start at</Th>
+            <Th>match date</Th>
             <Th>status</Th>
-            <Th>location</Th>
-            <Th>phase</Th>
-            <Th>Delete</Th>
+            <Th>action</Th>
           </Tr>
         </Thead>
         <Tbody>
           {matches.data?.map((match) => (
             <Tr key={match.id}>
               <Td>{match.homeTeam}</Td>
-              <Td>{match.homeTeamScore}</Td>
               <Td>{match.awayTeam}</Td>
-              <Td>{match.awayTeamScore}</Td>
-              <Td>
-                {DateTime.fromJSDate(match.startsAt).toFormat('yyyy-MM-dd HH:mm')} (
-                {DateTime.fromJSDate(match.startsAt).toRelative()})
-              </Td>
-              <Td>{match.status}</Td>
+              <Td>{DateTime.fromJSDate(match.startsAt).toRelative()}</Td>
               <Td>{match.location}</Td>
-              <Td>{match.phase}</Td>
               <Td>
-                <Button
-                  isDisabled={delMatch.isLoading}
-                  isLoading={delMatch.isLoading}
-                  onClick={onClickDel(match.id)}
-                  colorScheme="red"
-                  variant="ghost"
-                  size="sm"
-                >
-                  delete
+                <Button colorScheme="purple" variant="outline" size="sm">
+                  bet
                 </Button>
               </Td>
             </Tr>

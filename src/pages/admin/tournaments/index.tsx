@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import { useSession } from 'next-auth/react'
 import NextLink from 'next/link'
 
-import CreateTournament from 'components/CreateTournament'
+import CreateTournament from 'components/admin/CreateTournament'
 import CustomLink from 'components/CustomLink'
 import Unauthorized from 'components/Unauthorized'
 import { trpc } from 'utils/trpc'

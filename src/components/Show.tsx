@@ -1,5 +1,5 @@
 interface Props {
-  when: boolean
+  when?: boolean
   children: JSX.Element
   fallback?: JSX.Element
 }

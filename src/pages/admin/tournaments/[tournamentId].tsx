@@ -20,8 +20,8 @@ import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 
+import Matches from 'components/admin/Matches'
 import CustomLink from 'components/CustomLink'
-import Matches from 'components/Matches'
 import Unauthorized from 'components/Unauthorized'
 import { trpc } from 'utils/trpc'
 
@@ -39,8 +39,8 @@ const Tournaments = (_: Props) => {
   const [startsAt, setStartsAt] = useState('')
   const router = useRouter()
   const toast = useToast()
-  const { tournamentId } = router.query
-  const { data: tournament, isLoading } = trpc.useQuery(['tournament.getOne', tournamentId as string])
+  const tournamentId = router.query.tournamentId as string
+  const { data: tournament, isLoading } = trpc.useQuery(['tournament.getOne', tournamentId])
   const updateTournamentTitle = trpc.useMutation('tournament.rename', {
     onSuccess: () => {
       invalidateQueries(['tournament.getOne'])
@@ -79,11 +79,11 @@ const Tournaments = (_: Props) => {
   }
 
   const onChangeTitle: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    updateTournamentTitle.mutate({ id: tournamentId as string, name: e.target.value })
+    updateTournamentTitle.mutate({ id: tournamentId, name: e.target.value })
   }
   const onChangeImage: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.value === 'click me') return
-    updateTournamentImage.mutate({ id: tournamentId as string, image: e.target.value })
+    updateTournamentImage.mutate({ id: tournamentId, image: e.target.value })
   }
 
   const clearForm = () => {
@@ -133,7 +133,7 @@ const Tournaments = (_: Props) => {
       location: !location.trim() ? undefined : location.trim(),
       phase: !phase.trim() ? undefined : phase.trim(),
       startsAt: new Date(startsAt),
-      tournamentId: tournamentId as string,
+      tournamentId,
     }
 
     createMatch.mutate(match)
@@ -247,7 +247,7 @@ const Tournaments = (_: Props) => {
             </Flex>
           </form>
         </Flex>
-        <Matches />
+        <Matches tournamentId={tournamentId} isAdmin />
       </Flex>
     </>
   )
