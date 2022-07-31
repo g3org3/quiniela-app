@@ -38,7 +38,7 @@ const Navbar = (_: Props) => {
         <Show
           when={isAuthenticated}
           fallback={
-            <Button onClick={onClickLogin} variant="ghost">
+            <Button isLoading={status === 'loading'} onClick={onClickLogin} variant="ghost">
               Login
             </Button>
           }
