@@ -1,9 +1,10 @@
 import { Flex, Heading, Image, Select, Skeleton, SkeletonText, Text } from '@chakra-ui/react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 
 import CustomLink from 'components/CustomLink'
-import { trpc } from 'utils/trpc'
+import { trpc, TRPC_Driver } from 'utils/trpc'
 
 interface Props {
   //
@@ -17,9 +18,34 @@ const Race = (_: Props) => {
   const race = trpc.useQuery(['race.getOne', raceId])
   const drivers = trpc.useQuery(['racedriver.getAll'])
   const tournament = trpc.useQuery(['tournament.getOne', tournamentId])
-  const myDrivers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  const [firstDriver, setFirstDriver] = useState<TRPC_Driver | null>(null)
+  const [secondDriver, setSecondDriver] = useState<TRPC_Driver | null>(null)
+  const [thirdDriver, setThirdDriver] = useState<TRPC_Driver | null>(null)
 
-  const isOpen = race.data?.startsAt?.getTime() || 0 > Date.now()
+  const driversById =
+    drivers.data?.reduce<Record<string, TRPC_Driver>>((_byId, driver) => {
+      if (!_byId[driver.id]) {
+        _byId[driver.id] = driver
+      }
+
+      return _byId
+    }, {}) || {}
+
+  const onChangeFirstDriver: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const driver = driversById[e.target.value]
+    if (!driver) return
+    setFirstDriver(driver)
+  }
+  const onChangeSecondDriver: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const driver = driversById[e.target.value]
+    if (!driver) return
+    setSecondDriver(driver)
+  }
+  const onChangeThirdDriver: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const driver = driversById[e.target.value]
+    if (!driver) return
+    setThirdDriver(driver)
+  }
 
   return (
     <Flex flexDir="column" gap={10}>
@@ -38,20 +64,109 @@ const Race = (_: Props) => {
           </SkeletonText>
         </Flex>
       </Flex>
-      <Flex flexDir="column" gap={2} maxW="400px">
-        {myDrivers.map((driverId, index) => (
-          <Flex key={driverId} alignItems="center" gap={2}>
-            <Text fontFamily="monospace" fontSize="20px">
-              {index < 9 ? `0${index + 1}` : index + 1}
-            </Text>
-            <Select>
+      <Flex gap={10}>
+        <Flex alignItems="center" gap={2} flexDir="column">
+          <Image
+            alt="image"
+            width="200px"
+            fallbackSrc="https://via.placeholder.com/200"
+            src={firstDriver?.image || undefined}
+          />
+          <Flex alignItems="center" gap={2}>
+            <Text>1st</Text>
+            <Select onChange={onChangeFirstDriver}>
               <option value="">choose a driver</option>
               {drivers.data?.map((driver) => (
-                <option key={driver.id}>{driver.name}</option>
+                <option key={driver.id} value={driver.id}>
+                  {driver.name}
+                </option>
               ))}
             </Select>
           </Flex>
-        ))}
+          <Flex
+            alignItems="center"
+            border="1px solid"
+            borderColor="gray.200"
+            w="100%"
+            justifyContent="center"
+          >
+            <Image
+              alt="team"
+              height="50px"
+              src={firstDriver?.raceteam.image || undefined}
+              fallbackSrc="https://via.placeholder.com/50"
+            />
+            <Text>{firstDriver?.raceteam.name}</Text>
+          </Flex>
+        </Flex>
+        <Flex alignItems="center" gap={2} flexDir="column">
+          <Image
+            alt="image"
+            width="200px"
+            fallbackSrc="https://via.placeholder.com/200"
+            src={secondDriver?.image || undefined}
+          />
+          <Flex alignItems="center" gap={2}>
+            <Text>2nd</Text>
+            <Select onChange={onChangeSecondDriver}>
+              <option value="">choose a driver</option>
+              {drivers.data?.map((driver) => (
+                <option key={driver.id} value={driver.id}>
+                  {driver.name}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+          <Flex
+            alignItems="center"
+            border="1px solid"
+            borderColor="gray.200"
+            w="100%"
+            justifyContent="center"
+          >
+            <Image
+              alt="team"
+              height="50px"
+              src={secondDriver?.raceteam.image || undefined}
+              fallbackSrc="https://via.placeholder.com/50"
+            />
+            <Text>{secondDriver?.raceteam.name}</Text>
+          </Flex>
+        </Flex>
+        <Flex alignItems="center" gap={2} flexDir="column">
+          <Image
+            alt="image"
+            width="200px"
+            fallbackSrc="https://via.placeholder.com/200"
+            src={thirdDriver?.image || undefined}
+          />
+          <Flex alignItems="center" gap={2}>
+            <Text>3rd</Text>
+            <Select onChange={onChangeThirdDriver}>
+              <option value="">choose a driver</option>
+              {drivers.data?.map((driver) => (
+                <option key={driver.id} value={driver.id}>
+                  {driver.name}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+          <Flex
+            alignItems="center"
+            border="1px solid"
+            borderColor="gray.200"
+            w="100%"
+            justifyContent="center"
+          >
+            <Image
+              alt="team"
+              height="50px"
+              fallbackSrc="https://via.placeholder.com/50"
+              src={thirdDriver?.raceteam.image || undefined}
+            />
+            <Text>{thirdDriver?.raceteam.name}</Text>
+          </Flex>
+        </Flex>
       </Flex>
     </Flex>
   )

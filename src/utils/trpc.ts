@@ -24,3 +24,5 @@ export type inferMutationOutput<TRouteKey extends keyof AppRouter['_def']['mutat
 export type inferMutationInput<TRouteKey extends keyof AppRouter['_def']['mutations']> = inferProcedureInput<
   AppRouter['_def']['mutations'][TRouteKey]
 >
+
+export type TRPC_Driver = inferQueryOutput<'racedriver.getAll'>[0]
