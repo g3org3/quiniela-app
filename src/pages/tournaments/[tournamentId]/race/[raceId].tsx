@@ -73,22 +73,19 @@ const Race = (_: Props) => {
     }, {}) || {}
 
   const onChangeFirstDriver: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const driver = driversById[e.target.value]
-    if (!driver) return
+    const driver = driversById[e.target.value] || null
     setFirstDriver(driver)
-    upsertBet.mutate({ firstPlaceDriverId: driver.id, raceId })
+    upsertBet.mutate({ firstPlaceDriverId: driver?.id, raceId })
   }
   const onChangeSecondDriver: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const driver = driversById[e.target.value]
-    if (!driver) return
+    const driver = driversById[e.target.value] || null
     setSecondDriver(driver)
-    upsertBet.mutate({ secondPlaceDriverId: driver.id, raceId })
+    upsertBet.mutate({ secondPlaceDriverId: driver?.id, raceId })
   }
   const onChangeThirdDriver: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const driver = driversById[e.target.value]
-    if (!driver) return
+    const driver = driversById[e.target.value] || null
     setThirdDriver(driver)
-    upsertBet.mutate({ thirdPlaceDriverId: driver.id, raceId })
+    upsertBet.mutate({ thirdPlaceDriverId: driver?.id, raceId })
   }
 
   const isOpen = race.data?.startsAt ? (race.data?.startsAt > new Date() ? true : false) : false
@@ -189,11 +186,11 @@ const Race = (_: Props) => {
               ))}
             </Select>
           </Flex>
-          <Skeleton isLoaded={!upsertBet.isLoading} w="100%">
+          <Skeleton isLoaded={!upsertBet.isLoading && !race.isLoading && !racebet.isLoading} w="100%">
             <Flex
               alignItems="center"
               border="1px solid"
-              borderColor="gray.200"
+              borderColor="gray"
               w="100%"
               justifyContent="center"
               position="relative"
@@ -213,12 +210,12 @@ const Race = (_: Props) => {
               <Image
                 alt="team"
                 height="50px"
+                fallback={<Flex h="50px" w="50px"></Flex>}
                 src={
                   firstDriver?.raceTeamId
                     ? (teamsById[firstDriver?.raceTeamId] || {}).image || undefined
                     : undefined
                 }
-                fallbackSrc="https://via.placeholder.com/50"
               />
               <Text>{firstDriver?.raceTeamId ? (teamsById[firstDriver?.raceTeamId] || {}).name : null}</Text>
             </Flex>
@@ -260,11 +257,11 @@ const Race = (_: Props) => {
               ))}
             </Select>
           </Flex>
-          <Skeleton isLoaded={!upsertBet.isLoading} w="100%">
+          <Skeleton w="100%" isLoaded={!upsertBet.isLoading && !race.isLoading && !racebet.isLoading}>
             <Flex
               alignItems="center"
               border="1px solid"
-              borderColor="gray.200"
+              borderColor="gray"
               w="100%"
               justifyContent="center"
               position="relative"
@@ -284,12 +281,12 @@ const Race = (_: Props) => {
               <Image
                 alt="team"
                 height="50px"
+                fallback={<Flex h="50px" w="50px"></Flex>}
                 src={
                   secondDriver?.raceTeamId
                     ? (teamsById[secondDriver?.raceTeamId] || {}).image || undefined
                     : undefined
                 }
-                fallbackSrc="https://via.placeholder.com/50"
               />
               <Text>
                 {secondDriver?.raceTeamId ? (teamsById[secondDriver?.raceTeamId] || {}).name : null}
@@ -333,11 +330,11 @@ const Race = (_: Props) => {
               ))}
             </Select>
           </Flex>
-          <Skeleton isLoaded={!upsertBet.isLoading} w="100%">
+          <Skeleton isLoaded={!upsertBet.isLoading && !race.isLoading && !racebet.isLoading} w="100%">
             <Flex
               alignItems="center"
               border="1px solid"
-              borderColor="gray.200"
+              borderColor="gray"
               w="100%"
               justifyContent="center"
               position="relative"
@@ -357,12 +354,12 @@ const Race = (_: Props) => {
               <Image
                 alt="team"
                 height="50px"
+                fallback={<Flex h="50px" w="50px"></Flex>}
                 src={
                   thirdDriver?.raceTeamId
                     ? (teamsById[thirdDriver?.raceTeamId] || {}).image || undefined
                     : undefined
                 }
-                fallbackSrc="https://via.placeholder.com/50"
               />
               <Text>{thirdDriver?.raceTeamId ? (teamsById[thirdDriver?.raceTeamId] || {}).name : null}</Text>
             </Flex>

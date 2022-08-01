@@ -18,7 +18,7 @@ const Races = ({ tournamentId }: Props) => {
       <Heading fontWeight="normal" textTransform="capitalize">
         {tournament.data?.name}
       </Heading>
-      <Flex flexWrap="wrap" gap={5}>
+      <Flex flexWrap="wrap" gap={5} justifyContent="space-between">
         {races.data?.map((race) => {
           const isOpen = race?.startsAt ? (race?.startsAt > new Date() ? true : false) : false
 
