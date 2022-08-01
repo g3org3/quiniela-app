@@ -13,6 +13,7 @@ interface Props {
 
 // TODO: make a driver choose component
 // TODO: view other bets maybe in the admin
+// TODO: driver placeholder
 const Race = (_: Props) => {
   useSession({ required: true })
   const router = useRouter()
@@ -167,7 +168,7 @@ const Race = (_: Props) => {
             <Image
               alt="image"
               width="200px"
-              fallbackSrc="https://via.placeholder.com/200"
+              fallback={<Flex h="200px" w="200px" bg="whitesmoke"></Flex>}
               src={firstDriver?.image || undefined}
             />
           </Skeleton>
@@ -238,7 +239,7 @@ const Race = (_: Props) => {
             <Image
               alt="image"
               width="200px"
-              fallbackSrc="https://via.placeholder.com/200"
+              fallback={<Flex h="200px" w="200px" bg="whitesmoke"></Flex>}
               src={secondDriver?.image || undefined}
             />
           </Skeleton>
@@ -311,7 +312,7 @@ const Race = (_: Props) => {
             <Image
               alt="image"
               width="200px"
-              fallbackSrc="https://via.placeholder.com/200"
+              fallback={<Flex h="200px" w="200px" bg="whitesmoke"></Flex>}
               src={thirdDriver?.image || undefined}
             />
           </Skeleton>

@@ -33,7 +33,7 @@ const Home: NextPage = () => {
             h="unset"
             p="0"
             variant="ghost"
-            w="300px"
+            w={{ base: '100%', md: '300px' }}
           >
             <Show fallback={<Skeleton borderTopRadius="10px" h="200px" w="100%" />}>
               <Image borderTopRadius="10px" alt="tournament image" objectFit="cover" h="100px" w="100%" />

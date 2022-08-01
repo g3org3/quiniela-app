@@ -18,7 +18,7 @@ const Races = ({ tournamentId }: Props) => {
       <Heading fontWeight="normal" textTransform="capitalize">
         {tournament.data?.name}
       </Heading>
-      <Flex flexWrap="wrap" gap={5} justifyContent="space-between">
+      <Flex flexWrap="wrap" gap={5}>
         {races.data?.map((race) => {
           const isOpen = race?.startsAt ? (race?.startsAt > new Date() ? true : false) : false
 
@@ -35,8 +35,8 @@ const Races = ({ tournamentId }: Props) => {
             >
               <Flex key={race.id} flexDir="column" boxShadow="md">
                 <Image
-                  height="200px"
-                  w="355px"
+                  height={{ base: 'unset', md: '200px' }}
+                  w={{ base: '100%', md: '355px' }}
                   alt="image"
                   src={race.image || undefined}
                   borderTopRadius="10px"
