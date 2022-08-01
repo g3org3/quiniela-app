@@ -98,11 +98,17 @@ model Bet {
 }
 
 model RaceBet {
-    id     String  @id @default(cuid())
-    User   User?   @relation(fields: [userId], references: [id])
-    userId String?
-    Race   Race?   @relation(fields: [raceId], references: [id])
-    raceId String?
+    id                  String      @id @default(cuid())
+    User                User?       @relation(fields: [userId], references: [id])
+    userId              String?
+    Race                Race?       @relation(fields: [raceId], references: [id])
+    raceId              String?
+    firstPlaceDriverId  String?
+    secondPlaceDriverId String?
+    thirdPlaceDriverId  String?
+    firstPlaceDriver    RaceDriver? @relation(name: "firstDriverBet", fields: [firstPlaceDriverId], references: [id])
+    secondPlaceDriver   RaceDriver? @relation(name: "secondDriverBet", fields: [secondPlaceDriverId], references: [id])
+    thirdPlaceDriver    RaceDriver? @relation(name: "thirdDriverBet", fields: [thirdPlaceDriverId], references: [id])
 }
 
 enum Role {
@@ -111,16 +117,22 @@ enum Role {
 }
 
 model Race {
-    id           String      @id @default(cuid())
-    startsAt     DateTime
-    name         String
-    circuit      String?
-    image        String?     @db.Text
-    Tournament   Tournament? @relation(fields: [tournamentId], references: [id])
-    tournamentId String?
-    bets         RaceBet[]
-    User         User?       @relation(fields: [userId], references: [id])
-    userId       String?
+    id                  String      @id @default(cuid())
+    startsAt            DateTime
+    name                String
+    circuit             String?
+    image               String?     @db.Text
+    Tournament          Tournament? @relation(fields: [tournamentId], references: [id])
+    tournamentId        String?
+    bets                RaceBet[]
+    User                User?       @relation(fields: [userId], references: [id])
+    userId              String?
+    firstPlaceDriverId  String?
+    secondPlaceDriverId String?
+    thirdPlaceDriverId  String?
+    firstPlaceDriver    RaceDriver? @relation(name: "firstDriver", fields: [firstPlaceDriverId], references: [id])
+    secondPlaceDriver   RaceDriver? @relation(name: "secondDriver", fields: [secondPlaceDriverId], references: [id])
+    thirdPlaceDriver    RaceDriver? @relation(name: "thirdDriver", fields: [thirdPlaceDriverId], references: [id])
 }
 
 model RaceTeam {
@@ -131,11 +143,17 @@ model RaceTeam {
 }
 
 model RaceDriver {
-    id         String   @id @default(cuid())
-    name       String
-    image      String?  @db.Text
-    raceteam   RaceTeam @relation(fields: [raceTeamId], references: [id])
-    raceTeamId String
+    id               String    @id @default(cuid())
+    name             String
+    image            String?   @db.Text
+    raceteam         RaceTeam  @relation(fields: [raceTeamId], references: [id])
+    raceTeamId       String
+    firstPlaceRaces  Race[]    @relation("firstDriver")
+    secondPlaceRaces Race[]    @relation("secondDriver")
+    thirdPlaceRaces  Race[]    @relation("thirdDriver")
+    firstPlaceBets   RaceBet[] @relation("firstDriverBet")
+    secondPlaceBets  RaceBet[] @relation("secondDriverBet")
+    thirdPlaceBets   RaceBet[] @relation("thirdDriverBet")
 }
 
 model User {
