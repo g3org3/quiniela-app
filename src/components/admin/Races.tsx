@@ -1,4 +1,5 @@
 import { Flex, Heading, Image, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import CustomLink from 'components/CustomLink'
 import { DateTime } from 'luxon'
 
 import { trpc } from 'utils/trpc'
@@ -25,8 +26,12 @@ const Races = ({ tournamentId }: Props) => {
             <Tr key={race.id}>
               <Td>
                 <Flex alignItems="center" gap={2}>
-                  <Image alt="team logo" h="50px" src={race.image || undefined} />
-                  {race.name}
+                  <CustomLink href={`/admin/tournaments/${tournamentId}/race/${race.id}`}>
+                    <>
+                      <Image alt="team logo" h="50px" src={race.image || undefined} />
+                      {race.name}
+                    </>
+                  </CustomLink>
                 </Flex>
               </Td>
               <Td>
