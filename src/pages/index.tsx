@@ -52,7 +52,7 @@ const Home: NextPage = () => {
             display="flex"
             flexDir="column"
             h="unset"
-            href={`/tournaments/${tournament.id}`}
+            href={`/tournaments/${tournament.id}${tournament.isRace ? '/race' : ''}`}
             key={tournament.id}
             p="0"
             variant="ghost"

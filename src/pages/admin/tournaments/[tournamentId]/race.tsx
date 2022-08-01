@@ -23,7 +23,8 @@ import { useState } from 'react'
 import CreateRace from 'components/admin/CreateRace'
 import Drivers from 'components/admin/Drivers'
 import Matches from 'components/admin/Matches'
-import Teams from 'components/admin/Teams'
+import Teams from 'components/admin/Races'
+import Races from 'components/admin/Races'
 import CustomLink from 'components/CustomLink'
 import Unauthorized from 'components/Unauthorized'
 import { trpc } from 'utils/trpc'
@@ -181,6 +182,7 @@ const Race = (_: Props) => {
           </Flex>
           <Drivers />
         </Flex>
+        <Races tournamentId={tournamentId} />
       </Flex>
     </>
   )

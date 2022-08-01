@@ -4,8 +4,15 @@ import { createProtectedRouter, isAdminOrThrow } from './protected-router'
 
 export const raceRouter = createProtectedRouter()
   .query('getAll', {
-    async resolve({ ctx }) {
-      return await ctx.prisma.race.findMany()
+    input: z.string(),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.race.findMany({ where: { tournamentId: input }, orderBy: { startsAt: 'asc' } })
+    },
+  })
+  .query('getOne', {
+    input: z.string(),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.race.findFirstOrThrow({ where: { id: input } })
     },
   })
   .mutation('create', {
