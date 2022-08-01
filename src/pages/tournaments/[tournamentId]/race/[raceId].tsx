@@ -150,7 +150,7 @@ const Race = (_: Props) => {
           </SkeletonText>
         </Flex>
       </Flex>
-      <Flex gap={10} flexDir={{base: 'column', md: 'row'}}>
+      <Flex gap={10} flexDir={{ base: 'column', md: 'row' }}>
         <Flex alignItems="center" gap={2} flexDir="column" position="relative">
           {!isOpen && !race.isLoading && !racebet.isLoading && (
             <Badge

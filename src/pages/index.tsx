@@ -56,7 +56,7 @@ const Home: NextPage = () => {
             key={tournament.id}
             p="0"
             variant="ghost"
-            w={{base: '100%', md: "200px"}}
+            w={{ base: '100%', md: '200px' }}
           >
             <Show
               when={!!tournament.image}
@@ -66,7 +66,7 @@ const Home: NextPage = () => {
                 borderTopRadius="10px"
                 alt="tournament image"
                 objectFit="cover"
-                h={{base:'200px', md:"100px"}}
+                h={{ base: '200px', md: '100px' }}
                 w="100%"
                 src={tournament.image || undefined}
               />
