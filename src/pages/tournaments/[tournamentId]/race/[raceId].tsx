@@ -1,11 +1,11 @@
 import { Badge, Flex, Heading, Image, Select, Skeleton, SkeletonText, Text, useToast } from '@chakra-ui/react'
+import { DateTime } from 'luxon'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import CustomLink from 'components/CustomLink'
 import { trpc, TRPC_Driver, TRPC_Raceteam } from 'utils/trpc'
-import { DateTime } from 'luxon'
 
 interface Props {
   //
@@ -23,7 +23,6 @@ const Race = (_: Props) => {
   const drivers = trpc.useQuery(['racedriver.getAll'])
   const tournament = trpc.useQuery(['tournament.getOne', tournamentId])
   const racebet = trpc.useQuery(['racebet.getOneByRaceId', raceId])
-
 
   // TODO: infer the specific key firstDriver of a type
   const [firstDriver, setFirstDriver] = useState<TRPC_Driver | null>(null)
@@ -56,8 +55,6 @@ const Race = (_: Props) => {
       })
     },
   })
-
-  
 
   const teamsById: Record<string, TRPC_Raceteam> = {}
   const driversById =
@@ -92,7 +89,7 @@ const Race = (_: Props) => {
     upsertBet.mutate({ thirdPlaceDriverId: driver.id, raceId })
   }
 
-  const isOpen = race.data?.startsAt? race.data?.startsAt > new Date() ? true: false:false
+  const isOpen = race.data?.startsAt ? (race.data?.startsAt > new Date() ? true : false) : false
 
   let points = 0
   const isFirstOk = race.data?.firstPlaceDriverId === racebet.data?.firstPlaceDriverId
@@ -107,7 +104,8 @@ const Race = (_: Props) => {
   if (isSecondOk) {
     points += 2
   }
-  const isSecondTeamOk = race.data?.secondPlaceDriver?.raceTeamId === racebet.data?.secondPlaceDriver?.raceTeamId
+  const isSecondTeamOk =
+    race.data?.secondPlaceDriver?.raceTeamId === racebet.data?.secondPlaceDriver?.raceTeamId
   if (isSecondTeamOk) {
     points += 1
   }
@@ -125,7 +123,19 @@ const Race = (_: Props) => {
       <Heading fontWeight="normal" textTransform="capitalize">
         <CustomLink href={`/tournaments/${tournamentId}/race`}>{tournament.data?.name || 'Races'}</CustomLink>
       </Heading>
-      <Flex gap={2} borderTop="1px solid" borderBottom="1px solid" borderColor="gray.200" alignItems="center">
+      <Flex
+        gap={2}
+        borderTop="1px solid"
+        borderBottom="1px solid"
+        borderColor="gray.200"
+        alignItems="center"
+        position="relative"
+      >
+        {!race.isLoading && !racebet.isLoading && !isOpen && (
+          <Badge colorScheme="purple" fontSize="16px" position="absolute" top="-13px" left="-20px">
+            + {points} points
+          </Badge>
+        )}
         <Skeleton w={race.isLoading ? '177px' : undefined} isLoaded={!race.isLoading}>
           <Image height="100px" alt="race" src={race.data?.image || undefined} />
         </Skeleton>
@@ -133,19 +143,27 @@ const Race = (_: Props) => {
           <SkeletonText isLoaded={!race.isLoading}>
             <Heading fontWeight="normal">{race.data?.name || 'The name of the race'}</Heading>
             <Text>{race.data?.circuit}</Text>
-            <Text>{race.data?.startsAt?DateTime.fromJSDate(race.data?.startsAt).toRelative():null}</Text>
-            <Badge variant="outline" colorScheme={isOpen ? 'green': 'red'}>{isOpen? 'Open': 'Closed'}</Badge>
+            <Text>{race.data?.startsAt ? DateTime.fromJSDate(race.data?.startsAt).toRelative() : null}</Text>
+            <Badge variant="outline" colorScheme={isOpen ? 'green' : 'red'} px={2}>
+              {isOpen ? 'Open' : 'Closed'}
+            </Badge>
           </SkeletonText>
-        </Flex>
-        <Flex>
-          {!race.isLoading && !racebet.isLoading && !isOpen && <Badge colorScheme="purple" fontSize="20px">
-          + {points} points
-          </Badge>}
         </Flex>
       </Flex>
       <Flex gap={10}>
         <Flex alignItems="center" gap={2} flexDir="column" position="relative">
-          {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isFirstOk? 'green':'red'}>{isFirstOk ? 'CORRECT +2': 'WRONG'}</Badge>}
+          {!isOpen && !race.isLoading && !racebet.isLoading && (
+            <Badge
+              boxShadow="md"
+              variant="solid"
+              position="absolute"
+              top="-5px"
+              left="-10px"
+              colorScheme={isFirstOk ? 'green' : 'red'}
+            >
+              {isFirstOk ? 'CORRECT +2' : 'WRONG'}
+            </Badge>
+          )}
           <Skeleton isLoaded={!racebet.isLoading}>
             <Image
               alt="image"
@@ -156,7 +174,11 @@ const Race = (_: Props) => {
           </Skeleton>
           <Flex alignItems="center" gap={2}>
             <Text>1st</Text>
-            <Select value={racebet.data?.firstPlaceDriverId||undefined} disabled={upsertBet.isLoading || !isOpen} onChange={onChangeFirstDriver}>
+            <Select
+              value={racebet.data?.firstPlaceDriverId || undefined}
+              disabled={upsertBet.isLoading || !isOpen}
+              onChange={onChangeFirstDriver}
+            >
               <option value="">choose a driver</option>
               {drivers.data?.map((driver) => (
                 <option key={driver.id} value={driver.id}>
@@ -174,7 +196,18 @@ const Race = (_: Props) => {
               justifyContent="center"
               position="relative"
             >
-              {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isFirstTeamOk? 'green':'red'}>{isFirstTeamOk ? 'CORRECT +1': 'WRONG'}</Badge>}
+              {!isOpen && !race.isLoading && !racebet.isLoading && (
+                <Badge
+                  boxShadow="md"
+                  variant="solid"
+                  position="absolute"
+                  top="-5px"
+                  left="-10px"
+                  colorScheme={isFirstTeamOk ? 'green' : 'red'}
+                >
+                  {isFirstTeamOk ? 'CORRECT +1' : 'WRONG'}
+                </Badge>
+              )}
               <Image
                 alt="team"
                 height="50px"
@@ -190,7 +223,18 @@ const Race = (_: Props) => {
           </Skeleton>
         </Flex>
         <Flex alignItems="center" gap={2} flexDir="column" position="relative">
-          {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isSecondOk? 'green':'red'}>{isSecondOk ? 'CORRECT +2': 'WRONG'}</Badge>}
+          {!isOpen && !race.isLoading && !racebet.isLoading && (
+            <Badge
+              boxShadow="md"
+              variant="solid"
+              position="absolute"
+              top="-5px"
+              left="-10px"
+              colorScheme={isSecondOk ? 'green' : 'red'}
+            >
+              {isSecondOk ? 'CORRECT +2' : 'WRONG'}
+            </Badge>
+          )}
           <Skeleton isLoaded={!racebet.isLoading}>
             <Image
               alt="image"
@@ -201,7 +245,11 @@ const Race = (_: Props) => {
           </Skeleton>
           <Flex alignItems="center" gap={2}>
             <Text>2nd</Text>
-            <Select value={racebet.data?.secondPlaceDriverId||undefined} disabled={upsertBet.isLoading || !isOpen} onChange={onChangeSecondDriver}>
+            <Select
+              value={racebet.data?.secondPlaceDriverId || undefined}
+              disabled={upsertBet.isLoading || !isOpen}
+              onChange={onChangeSecondDriver}
+            >
               <option value="">choose a driver</option>
               {drivers.data?.map((driver) => (
                 <option key={driver.id} value={driver.id}>
@@ -219,7 +267,18 @@ const Race = (_: Props) => {
               justifyContent="center"
               position="relative"
             >
-              {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isSecondTeamOk? 'green':'red'}>{isSecondTeamOk ? 'CORRECT +1': 'WRONG'}</Badge>}
+              {!isOpen && !race.isLoading && !racebet.isLoading && (
+                <Badge
+                  boxShadow="md"
+                  variant="solid"
+                  position="absolute"
+                  top="-5px"
+                  left="-10px"
+                  colorScheme={isSecondTeamOk ? 'green' : 'red'}
+                >
+                  {isSecondTeamOk ? 'CORRECT +1' : 'WRONG'}
+                </Badge>
+              )}
               <Image
                 alt="team"
                 height="50px"
@@ -237,7 +296,18 @@ const Race = (_: Props) => {
           </Skeleton>
         </Flex>
         <Flex alignItems="center" gap={2} flexDir="column" position="relative">
-          {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isThirdOk? 'green':'red'}>{isThirdOk ? 'CORRECT +2': 'WRONG'}</Badge>}
+          {!isOpen && !race.isLoading && !racebet.isLoading && (
+            <Badge
+              boxShadow="md"
+              variant="solid"
+              position="absolute"
+              top="-5px"
+              left="-10px"
+              colorScheme={isThirdOk ? 'green' : 'red'}
+            >
+              {isThirdOk ? 'CORRECT +2' : 'WRONG'}
+            </Badge>
+          )}
           <Skeleton isLoaded={!racebet.isLoading}>
             <Image
               alt="image"
@@ -248,7 +318,11 @@ const Race = (_: Props) => {
           </Skeleton>
           <Flex alignItems="center" gap={2}>
             <Text>3rd</Text>
-            <Select value={racebet.data?.thirdPlaceDriverId||undefined} disabled={upsertBet.isLoading || !isOpen} onChange={onChangeThirdDriver}>
+            <Select
+              value={racebet.data?.thirdPlaceDriverId || undefined}
+              disabled={upsertBet.isLoading || !isOpen}
+              onChange={onChangeThirdDriver}
+            >
               <option value="">choose a driver</option>
               {drivers.data?.map((driver) => (
                 <option key={driver.id} value={driver.id}>
@@ -266,7 +340,18 @@ const Race = (_: Props) => {
               justifyContent="center"
               position="relative"
             >
-              {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isThirdTeamOk? 'green':'red'}>{isThirdTeamOk ? 'CORRECT +1': 'WRONG'}</Badge>}
+              {!isOpen && !race.isLoading && !racebet.isLoading && (
+                <Badge
+                  boxShadow="md"
+                  variant="solid"
+                  position="absolute"
+                  top="-5px"
+                  left="-10px"
+                  colorScheme={isThirdTeamOk ? 'green' : 'red'}
+                >
+                  {isThirdTeamOk ? 'CORRECT +1' : 'WRONG'}
+                </Badge>
+              )}
               <Image
                 alt="team"
                 height="50px"

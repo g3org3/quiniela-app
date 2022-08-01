@@ -1,11 +1,11 @@
 import { Badge, Flex, Heading, Image, Select, Skeleton, SkeletonText, Text, useToast } from '@chakra-ui/react'
+import { DateTime } from 'luxon'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import CustomLink from 'components/CustomLink'
 import { trpc, TRPC_Driver, TRPC_Raceteam } from 'utils/trpc'
-import { DateTime } from 'luxon'
 
 interface Props {
   //
@@ -22,7 +22,6 @@ const Race = (_: Props) => {
   const race = trpc.useQuery(['race.getOneWithDrivers', raceId])
   const drivers = trpc.useQuery(['racedriver.getAll'])
   const tournament = trpc.useQuery(['tournament.getOne', tournamentId])
-
 
   // TODO: infer the specific key firstDriver of a type
   const [firstDriver, setFirstDriver] = useState<TRPC_Driver | null>(null)
@@ -55,8 +54,6 @@ const Race = (_: Props) => {
       })
     },
   })
-
-  
 
   const teamsById: Record<string, TRPC_Raceteam> = {}
   const driversById =
@@ -91,14 +88,15 @@ const Race = (_: Props) => {
     upsertRaceDrivers.mutate({ thirdPlaceDriverId: driver.id, raceId })
   }
 
-  const isOpen = race.data?.startsAt? race.data?.startsAt > new Date() ? true: false:false
-
+  const isOpen = race.data?.startsAt ? (race.data?.startsAt > new Date() ? true : false) : false
 
   return (
     <Flex flexDir="column" gap={10}>
       <Heading fontWeight="light" textTransform="capitalize">
-         <CustomLink href={`/admin/tournaments`}>To</CustomLink>{' '} / {' '}
-        <CustomLink href={`/admin/tournaments/${tournamentId}/race`}>{tournament.data?.name || 'Races'}</CustomLink>{' '}
+        <CustomLink href={`/admin/tournaments`}>To</CustomLink> /{' '}
+        <CustomLink href={`/admin/tournaments/${tournamentId}/race`}>
+          {tournament.data?.name || 'Races'}
+        </CustomLink>{' '}
         / {race.data?.name}
       </Heading>
       <Flex gap={2} borderTop="1px solid" borderBottom="1px solid" borderColor="gray.200" alignItems="center">
@@ -109,8 +107,8 @@ const Race = (_: Props) => {
           <SkeletonText isLoaded={!race.isLoading}>
             <Heading fontWeight="normal">{race.data?.name || 'The name of the race'}</Heading>
             <Text>{race.data?.circuit}</Text>
-            <Text>{race.data?.startsAt?DateTime.fromJSDate(race.data?.startsAt).toRelative():null}</Text>
-            <Badge colorScheme={isOpen ? 'green': 'red'}>{isOpen? 'Open': 'Closed'}</Badge>
+            <Text>{race.data?.startsAt ? DateTime.fromJSDate(race.data?.startsAt).toRelative() : null}</Text>
+            <Badge colorScheme={isOpen ? 'green' : 'red'}>{isOpen ? 'Open' : 'Closed'}</Badge>
           </SkeletonText>
         </Flex>
       </Flex>
@@ -124,7 +122,11 @@ const Race = (_: Props) => {
           />
           <Flex alignItems="center" gap={2}>
             <Text>1st</Text>
-            <Select value={race.data?.firstPlaceDriverId||undefined} disabled={upsertRaceDrivers.isLoading} onChange={onChangeFirstDriver}>
+            <Select
+              value={race.data?.firstPlaceDriverId || undefined}
+              disabled={upsertRaceDrivers.isLoading}
+              onChange={onChangeFirstDriver}
+            >
               <option value="">choose a driver</option>
               {drivers.data?.map((driver) => (
                 <option key={driver.id} value={driver.id}>
@@ -164,7 +166,11 @@ const Race = (_: Props) => {
           />
           <Flex alignItems="center" gap={2}>
             <Text>2nd</Text>
-            <Select value={race.data?.secondPlaceDriverId||undefined} disabled={upsertRaceDrivers.isLoading} onChange={onChangeSecondDriver}>
+            <Select
+              value={race.data?.secondPlaceDriverId || undefined}
+              disabled={upsertRaceDrivers.isLoading}
+              onChange={onChangeSecondDriver}
+            >
               <option value="">choose a driver</option>
               {drivers.data?.map((driver) => (
                 <option key={driver.id} value={driver.id}>
@@ -206,7 +212,11 @@ const Race = (_: Props) => {
           />
           <Flex alignItems="center" gap={2}>
             <Text>3rd</Text>
-            <Select value={race.data?.thirdPlaceDriverId||undefined} disabled={upsertRaceDrivers.isLoading} onChange={onChangeThirdDriver}>
+            <Select
+              value={race.data?.thirdPlaceDriverId || undefined}
+              disabled={upsertRaceDrivers.isLoading}
+              onChange={onChangeThirdDriver}
+            >
               <option value="">choose a driver</option>
               {drivers.data?.map((driver) => (
                 <option key={driver.id} value={driver.id}>

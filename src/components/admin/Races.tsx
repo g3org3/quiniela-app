@@ -1,7 +1,7 @@
 import { Flex, Heading, Image, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
-import CustomLink from 'components/CustomLink'
 import { DateTime } from 'luxon'
 
+import CustomLink from 'components/CustomLink'
 import { trpc } from 'utils/trpc'
 
 interface Props {

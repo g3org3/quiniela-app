@@ -18,7 +18,10 @@ export const raceRouter = createProtectedRouter()
   .query('getOneWithDrivers', {
     input: z.string(),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.race.findFirstOrThrow({ where: { id: input }, include: {firstPlaceDriver:true, secondPlaceDriver:true, thirdPlaceDriver:true} })
+      return await ctx.prisma.race.findFirstOrThrow({
+        where: { id: input },
+        include: { firstPlaceDriver: true, secondPlaceDriver: true, thirdPlaceDriver: true },
+      })
     },
   })
   .mutation('upsertDrivers', {
