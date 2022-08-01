@@ -22,7 +22,7 @@ export const raceBetRouter = createProtectedRouter()
       thirdPlaceDriverId: z.string().nullish(),
     }),
     async resolve({ ctx, input: { raceId, firstPlaceDriverId, secondPlaceDriverId, thirdPlaceDriverId } }) {
-      const userId = isAdminOrThrow(ctx)
+      const userId = ctx.session.user.id
 
       const bet = await ctx.prisma.raceBet.findFirst({ where: { raceId, userId } })
 
