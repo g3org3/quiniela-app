@@ -123,8 +123,7 @@ const Race = (_: Props) => {
   return (
     <Flex flexDir="column" gap={10}>
       <Heading fontWeight="normal" textTransform="capitalize">
-        <CustomLink href={`/tournaments/${tournamentId}/race`}>{tournament.data?.name || 'Races'}</CustomLink>{' '}
-        / {race.data?.name}
+        <CustomLink href={`/tournaments/${tournamentId}/race`}>{tournament.data?.name || 'Races'}</CustomLink>
       </Heading>
       <Flex gap={2} borderTop="1px solid" borderBottom="1px solid" borderColor="gray.200" alignItems="center">
         <Skeleton w={race.isLoading ? '177px' : undefined} isLoaded={!race.isLoading}>
@@ -139,20 +138,22 @@ const Race = (_: Props) => {
           </SkeletonText>
         </Flex>
         <Flex>
-            <Badge colorScheme="purple" fontSize="20px">
+          {!race.isLoading && !racebet.isLoading && !isOpen && <Badge colorScheme="purple" fontSize="20px">
           + {points} points
-          </Badge>
+          </Badge>}
         </Flex>
       </Flex>
       <Flex gap={10}>
         <Flex alignItems="center" gap={2} flexDir="column" position="relative">
-          {!isOpen && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isFirstOk? 'green':'red'}>{isFirstOk ? 'CORRECT +2': 'WRONG'}</Badge>}
-          <Image
-            alt="image"
-            width="200px"
-            fallbackSrc="https://via.placeholder.com/200"
-            src={firstDriver?.image || undefined}
-          />
+          {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isFirstOk? 'green':'red'}>{isFirstOk ? 'CORRECT +2': 'WRONG'}</Badge>}
+          <Skeleton isLoaded={!racebet.isLoading}>
+            <Image
+              alt="image"
+              width="200px"
+              fallbackSrc="https://via.placeholder.com/200"
+              src={firstDriver?.image || undefined}
+            />
+          </Skeleton>
           <Flex alignItems="center" gap={2}>
             <Text>1st</Text>
             <Select value={racebet.data?.firstPlaceDriverId||undefined} disabled={upsertBet.isLoading || !isOpen} onChange={onChangeFirstDriver}>
@@ -173,7 +174,7 @@ const Race = (_: Props) => {
               justifyContent="center"
               position="relative"
             >
-              {!isOpen && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isFirstTeamOk? 'green':'red'}>{isFirstTeamOk ? 'CORRECT +1': 'WRONG'}</Badge>}
+              {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isFirstTeamOk? 'green':'red'}>{isFirstTeamOk ? 'CORRECT +1': 'WRONG'}</Badge>}
               <Image
                 alt="team"
                 height="50px"
@@ -189,13 +190,15 @@ const Race = (_: Props) => {
           </Skeleton>
         </Flex>
         <Flex alignItems="center" gap={2} flexDir="column" position="relative">
-          {!isOpen && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isSecondOk? 'green':'red'}>{isSecondOk ? 'CORRECT +2': 'WRONG'}</Badge>}
-          <Image
-            alt="image"
-            width="200px"
-            fallbackSrc="https://via.placeholder.com/200"
-            src={secondDriver?.image || undefined}
-          />
+          {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isSecondOk? 'green':'red'}>{isSecondOk ? 'CORRECT +2': 'WRONG'}</Badge>}
+          <Skeleton isLoaded={!racebet.isLoading}>
+            <Image
+              alt="image"
+              width="200px"
+              fallbackSrc="https://via.placeholder.com/200"
+              src={secondDriver?.image || undefined}
+            />
+          </Skeleton>
           <Flex alignItems="center" gap={2}>
             <Text>2nd</Text>
             <Select value={racebet.data?.secondPlaceDriverId||undefined} disabled={upsertBet.isLoading || !isOpen} onChange={onChangeSecondDriver}>
@@ -216,7 +219,7 @@ const Race = (_: Props) => {
               justifyContent="center"
               position="relative"
             >
-              {!isOpen && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isSecondTeamOk? 'green':'red'}>{isSecondTeamOk ? 'CORRECT +1': 'WRONG'}</Badge>}
+              {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isSecondTeamOk? 'green':'red'}>{isSecondTeamOk ? 'CORRECT +1': 'WRONG'}</Badge>}
               <Image
                 alt="team"
                 height="50px"
@@ -234,13 +237,15 @@ const Race = (_: Props) => {
           </Skeleton>
         </Flex>
         <Flex alignItems="center" gap={2} flexDir="column" position="relative">
-          {!isOpen && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isThirdOk? 'green':'red'}>{isThirdOk ? 'CORRECT +2': 'WRONG'}</Badge>}
-          <Image
-            alt="image"
-            width="200px"
-            fallbackSrc="https://via.placeholder.com/200"
-            src={thirdDriver?.image || undefined}
-          />
+          {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isThirdOk? 'green':'red'}>{isThirdOk ? 'CORRECT +2': 'WRONG'}</Badge>}
+          <Skeleton isLoaded={!racebet.isLoading}>
+            <Image
+              alt="image"
+              width="200px"
+              fallbackSrc="https://via.placeholder.com/200"
+              src={thirdDriver?.image || undefined}
+            />
+          </Skeleton>
           <Flex alignItems="center" gap={2}>
             <Text>3rd</Text>
             <Select value={racebet.data?.thirdPlaceDriverId||undefined} disabled={upsertBet.isLoading || !isOpen} onChange={onChangeThirdDriver}>
@@ -261,7 +266,7 @@ const Race = (_: Props) => {
               justifyContent="center"
               position="relative"
             >
-              {!isOpen && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isThirdTeamOk? 'green':'red'}>{isThirdTeamOk ? 'CORRECT +1': 'WRONG'}</Badge>}
+              {!isOpen && !race.isLoading && !racebet.isLoading && <Badge boxShadow="md"variant="solid" position="absolute" top="-5px" left="-10px" colorScheme={isThirdTeamOk? 'green':'red'}>{isThirdTeamOk ? 'CORRECT +1': 'WRONG'}</Badge>}
               <Image
                 alt="team"
                 height="50px"
