@@ -11,6 +11,8 @@ interface Props {
   //
 }
 
+// TODO: make a driver choose component
+// TODO: view other bets maybe in the admin
 const Race = (_: Props) => {
   useSession({ required: true })
   const router = useRouter()
@@ -119,7 +121,7 @@ const Race = (_: Props) => {
   }
 
   return (
-    <Flex flexDir="column" gap={10}>
+    <Flex flexDir="column" gap={10} pb={10}>
       <Heading fontWeight="normal" textTransform="capitalize">
         <CustomLink href={`/tournaments/${tournamentId}/race`}>{tournament.data?.name || 'Races'}</CustomLink>
       </Heading>
@@ -150,7 +152,7 @@ const Race = (_: Props) => {
           </SkeletonText>
         </Flex>
       </Flex>
-      <Flex gap={10} flexDir={{ base: 'column', md: 'row' }}>
+      <Flex gap={10} flexDir={{ base: 'column', md: 'row' }} justifyContent="space-around">
         <Flex alignItems="center" gap={2} flexDir="column" position="relative">
           {!isOpen && !race.isLoading && !racebet.isLoading && (
             <Badge
@@ -172,8 +174,8 @@ const Race = (_: Props) => {
               src={firstDriver?.image || undefined}
             />
           </Skeleton>
-          <Flex alignItems="center" gap={2}>
-            <Text>1st</Text>
+          <Flex alignItems="center" gap={2} w="100%">
+            <Text fontWeight="bold">1st</Text>
             <Select
               value={racebet.data?.firstPlaceDriverId || undefined}
               disabled={upsertBet.isLoading || !isOpen}
@@ -243,8 +245,8 @@ const Race = (_: Props) => {
               src={secondDriver?.image || undefined}
             />
           </Skeleton>
-          <Flex alignItems="center" gap={2}>
-            <Text>2nd</Text>
+          <Flex alignItems="center" gap={2} w="100%">
+            <Text fontWeight="bold">2nd</Text>
             <Select
               value={racebet.data?.secondPlaceDriverId || undefined}
               disabled={upsertBet.isLoading || !isOpen}
@@ -316,8 +318,8 @@ const Race = (_: Props) => {
               src={thirdDriver?.image || undefined}
             />
           </Skeleton>
-          <Flex alignItems="center" gap={2}>
-            <Text>3rd</Text>
+          <Flex alignItems="center" gap={2} w="100%">
+            <Text fontWeight="bold">3rd</Text>
             <Select
               value={racebet.data?.thirdPlaceDriverId || undefined}
               disabled={upsertBet.isLoading || !isOpen}

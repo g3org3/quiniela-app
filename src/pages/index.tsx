@@ -33,9 +33,9 @@ const Home: NextPage = () => {
             h="unset"
             p="0"
             variant="ghost"
-            w="200px"
+            w="300px"
           >
-            <Show fallback={<Skeleton borderTopRadius="10px" h="100px" w="100%" />}>
+            <Show fallback={<Skeleton borderTopRadius="10px" h="200px" w="100%" />}>
               <Image borderTopRadius="10px" alt="tournament image" objectFit="cover" h="100px" w="100%" />
             </Show>
 
@@ -56,7 +56,7 @@ const Home: NextPage = () => {
             key={tournament.id}
             p="0"
             variant="ghost"
-            w={{ base: '100%', md: '200px' }}
+            w={{ base: '100%', md: '300px' }}
           >
             <Show
               when={!!tournament.image}
@@ -66,7 +66,7 @@ const Home: NextPage = () => {
                 borderTopRadius="10px"
                 alt="tournament image"
                 objectFit="cover"
-                h={{ base: '200px', md: '100px' }}
+                h={{ base: '200px', md: '200px' }}
                 w="100%"
                 src={tournament.image || undefined}
               />

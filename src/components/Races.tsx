@@ -1,4 +1,5 @@
-import { Badge, Flex, Heading, Image, Text, Button } from '@chakra-ui/react'
+import { Badge, Flex, Heading, Image, Text, Button, Spacer } from '@chakra-ui/react'
+import { DateTime } from 'luxon'
 
 import { trpc } from 'utils/trpc'
 
@@ -33,7 +34,13 @@ const Races = ({ tournamentId }: Props) => {
               borderTopRadius="10px"
             >
               <Flex key={race.id} flexDir="column" boxShadow="md">
-                <Image height="200px" alt="image" src={race.image || undefined} borderTopRadius="10px" />
+                <Image
+                  height="200px"
+                  w="355px"
+                  alt="image"
+                  src={race.image || undefined}
+                  borderTopRadius="10px"
+                />
                 <Flex alignItems="center">
                   <Text fontSize="18px" p={2}>
                     {race.name}
@@ -41,6 +48,10 @@ const Races = ({ tournamentId }: Props) => {
                   <Badge colorScheme={isOpen ? 'green' : 'red'} variant="outline" py={1} px={3}>
                     {isOpen ? 'open' : 'closed'}
                   </Badge>
+                  <Spacer />
+                  <Text fontWeight="light" px={2}>
+                    {DateTime.fromJSDate(race.startsAt).toRelative()}
+                  </Text>
                 </Flex>
               </Flex>
             </Button>
