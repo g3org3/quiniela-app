@@ -120,7 +120,8 @@ const Race = (_: Props) => {
 
   return (
     <Flex flexDir="column" gap={10} pb={10}>
-      <Heading fontWeight="normal" textTransform="capitalize">
+      <Heading fontWeight="light" textTransform="capitalize">
+        <CustomLink href="/">Tournaments</CustomLink> /{' '}
         <CustomLink href={`/tournaments/${tournamentId}/race`}>{tournament.data?.name || 'Races'}</CustomLink>
       </Heading>
       <Flex

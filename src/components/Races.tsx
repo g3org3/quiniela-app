@@ -15,8 +15,8 @@ const Races = ({ tournamentId }: Props) => {
 
   return (
     <Flex flexDir="column" gap={4}>
-      <Heading fontWeight="normal" textTransform="capitalize">
-        {tournament.data?.name}
+      <Heading fontWeight="light" textTransform="capitalize">
+        <CustomLink href="/">Tournaments</CustomLink> / {tournament.data?.name}
       </Heading>
       <Flex flexWrap="wrap" gap={5}>
         {races.data?.map((race) => {
