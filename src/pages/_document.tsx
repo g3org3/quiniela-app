@@ -37,12 +37,7 @@ export default class Document extends NextDocument {
           <meta property="og:description" content={desc} />
           <meta property="og:site_name" content={title} />
           <meta property="og:url" content={process.env.VERCEL_URL} />
-          {/* <meta property='og:image' content='https://yourdomain.com/icons/apple-touch-icon.png' /> */}
-
-          <meta
-            name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
-          />
+          {/* <meta property="og:image" content="https://yourdomain.com/icons/apple-touch-icon.png" /> */}
         </Head>
         <body>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} type="cookie" />

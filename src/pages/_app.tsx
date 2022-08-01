@@ -3,16 +3,24 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { withTRPC } from '@trpc/next'
 import { SessionProvider } from 'next-auth/react'
 import type { AppType } from 'next/dist/shared/lib/utils'
+import Head from 'next/head'
 import superjson from 'superjson'
 
 import Layout from 'components/Layout'
 import type { AppRouter } from 'server/router'
 import { theme } from 'utils/theme'
+
 import 'styles/globals.css'
 
 const MyApp: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <>
+      <Head>
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+        />
+      </Head>
       <ChakraProvider theme={theme}>
         <SessionProvider session={session}>
           <Layout>
