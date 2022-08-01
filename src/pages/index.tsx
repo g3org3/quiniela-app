@@ -72,7 +72,7 @@ const Home: NextPage = () => {
               />
             </Show>
 
-            <Text p={3} fontWeight="normal">
+            <Text p={3} fontWeight="normal" textTransform="capitalize">
               {tournament.name}
             </Text>
           </Button>
