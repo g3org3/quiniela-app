@@ -5,6 +5,8 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import CustomLink from 'components/CustomLink'
+import ViewBets from 'components/ViewBets'
+import { getPoints } from 'utils/race'
 import { trpc, TRPC_Driver, TRPC_Raceteam } from 'utils/trpc'
 
 interface Props {
@@ -14,6 +16,8 @@ interface Props {
 // TODO: make a driver choose component
 // TODO: view other bets maybe in the admin
 // TODO: driver placeholder
+// TODO: refactor function to get points
+
 const Race = (_: Props) => {
   useSession({ required: true })
   const router = useRouter()
@@ -91,32 +95,8 @@ const Race = (_: Props) => {
 
   const isOpen = race.data?.startsAt ? (race.data?.startsAt > new Date() ? true : false) : false
 
-  let points = 0
-  const isFirstOk = race.data?.firstPlaceDriverId === racebet.data?.firstPlaceDriverId
-  if (isFirstOk) {
-    points += 2
-  }
-  const isFirstTeamOk = race.data?.firstPlaceDriver?.raceTeamId === racebet.data?.firstPlaceDriver?.raceTeamId
-  if (isFirstTeamOk) {
-    points += 1
-  }
-  const isSecondOk = race.data?.secondPlaceDriverId === racebet.data?.secondPlaceDriverId
-  if (isSecondOk) {
-    points += 2
-  }
-  const isSecondTeamOk =
-    race.data?.secondPlaceDriver?.raceTeamId === racebet.data?.secondPlaceDriver?.raceTeamId
-  if (isSecondTeamOk) {
-    points += 1
-  }
-  const isThirdOk = race.data?.thirdPlaceDriverId === racebet.data?.thirdPlaceDriverId
-  if (isThirdOk) {
-    points += 2
-  }
-  const isThirdTeamOk = race.data?.thirdPlaceDriver?.raceTeamId === racebet.data?.thirdPlaceDriver?.raceTeamId
-  if (isThirdTeamOk) {
-    points += 1
-  }
+  const { points, isFirstOk, isFirstTeamOk, isSecondOk, isSecondTeamOk, isThirdOk, isThirdTeamOk } =
+    getPoints(race.data, racebet.data)
 
   return (
     <Flex flexDir="column" gap={10} pb={10}>
@@ -368,6 +348,7 @@ const Race = (_: Props) => {
           </Skeleton>
         </Flex>
       </Flex>
+      <ViewBets raceId={raceId} race={race} isOpen={isOpen} />
     </Flex>
   )
 }

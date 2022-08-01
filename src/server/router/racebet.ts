@@ -14,6 +14,17 @@ export const raceBetRouter = createProtectedRouter()
       return racebet
     },
   })
+  .query('getAllByRaceId', {
+    input: z.string(),
+    async resolve({ ctx, input }) {
+      const racebet = await ctx.prisma.raceBet.findMany({
+        where: { raceId: input },
+        include: { firstPlaceDriver: true, secondPlaceDriver: true, thirdPlaceDriver: true, User: true },
+      })
+
+      return racebet
+    },
+  })
   .mutation('upsert', {
     input: z.object({
       raceId: z.string(),
