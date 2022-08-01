@@ -40,3 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 
 fifa-*.json
+
+**/public/sw.js

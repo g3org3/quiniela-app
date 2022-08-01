@@ -12,13 +12,15 @@ import 'styles/globals.css'
 
 const MyApp: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
-    <ChakraProvider theme={theme}>
-      <SessionProvider session={session}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </SessionProvider>
-    </ChakraProvider>
+    <>
+      <ChakraProvider theme={theme}>
+        <SessionProvider session={session}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </SessionProvider>
+      </ChakraProvider>
+    </>
   )
 }
 
