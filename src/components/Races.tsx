@@ -1,7 +1,8 @@
-import { Badge, Flex, Heading, Image, Text, Button, Spacer } from '@chakra-ui/react'
+import { Badge, Flex, Heading, Image, Text, Button, Spacer, Skeleton } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 
-import { trpc } from 'utils/trpc'
+import { getPoints } from 'utils/race'
+import { trpc, TRPC_Racebet } from 'utils/trpc'
 
 import CustomLink from './CustomLink'
 
@@ -10,8 +11,23 @@ interface Props {
 }
 
 const Races = ({ tournamentId }: Props) => {
-  const races = trpc.useQuery(['race.getAll', tournamentId])
+  const { prefetchQuery } = trpc.useContext()
   const tournament = trpc.useQuery(['tournament.getOne', tournamentId])
+  const races = trpc.useQuery(['race.getAll', tournamentId], {
+    onSuccess() {
+      prefetchQuery(['racedriver.getAll'])
+      prefetchQuery(['tournament.getOne', tournamentId])
+    },
+  })
+  const racebets = trpc.useQuery(['racebet.getAllByMeAndTournamentId', tournamentId])
+  const racebetsByRaceId =
+    racebets.data?.reduce<Record<string, TRPC_Racebet>>((byId, racebet) => {
+      if (!byId[racebet.raceId]) {
+        byId[racebet.raceId] = racebet
+      }
+
+      return byId
+    }, {}) || {}
 
   return (
     <Flex flexDir="column" gap={4}>
@@ -19,8 +35,23 @@ const Races = ({ tournamentId }: Props) => {
         <CustomLink href="/">Tournaments</CustomLink> / {tournament.data?.name}
       </Heading>
       <Flex flexWrap="wrap" gap={5}>
+        {races.isLoading && (
+          <>
+            <Skeleton isLoaded={!races.isLoading} boxShadow="md" borderTopRadius="10px">
+              <Button p="0" w="unset" h="unset" variant="ghost" borderTopRadius="10px">
+                <Flex height={{ base: 'unset', md: '237px' }} w={{ base: '100%', md: '355px' }} />
+              </Button>
+            </Skeleton>
+            <Skeleton isLoaded={!races.isLoading} boxShadow="md" borderTopRadius="10px">
+              <Button p="0" w="unset" h="unset" variant="ghost" borderTopRadius="10px">
+                <Flex height={{ base: 'unset', md: '237px' }} w={{ base: '100%', md: '355px' }} />
+              </Button>
+            </Skeleton>
+          </>
+        )}
         {races.data?.map((race) => {
           const isOpen = race?.startsAt ? (race?.startsAt > new Date() ? true : false) : false
+          const { points } = getPoints(race, racebetsByRaceId[race.id])
 
           return (
             <Button
@@ -32,7 +63,22 @@ const Races = ({ tournamentId }: Props) => {
               href={`/tournaments/${tournamentId}/race/${race.id}`}
               variant="ghost"
               borderTopRadius="10px"
+              position="relative"
             >
+              {!isOpen && (
+                <Badge
+                  colorScheme="purple"
+                  position="absolute"
+                  top="-5px"
+                  left="-5px"
+                  px={2}
+                  variant="solid"
+                  fontSize="16px"
+                >
+                  {'+ '}
+                  {points}
+                </Badge>
+              )}
               <Flex key={race.id} flexDir="column" boxShadow="md">
                 <Image
                   height={{ base: 'unset', md: '200px' }}

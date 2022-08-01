@@ -6,7 +6,15 @@ export const raceRouter = createProtectedRouter()
   .query('getAll', {
     input: z.string(),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.race.findMany({ where: { tournamentId: input }, orderBy: { startsAt: 'asc' } })
+      return await ctx.prisma.race.findMany({
+        where: { tournamentId: input },
+        orderBy: { startsAt: 'asc' },
+        include: {
+          firstPlaceDriver: true,
+          secondPlaceDriver: true,
+          thirdPlaceDriver: true,
+        },
+      })
     },
   })
   .query('getOne', {

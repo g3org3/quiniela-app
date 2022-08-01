@@ -25,6 +25,17 @@ export const raceBetRouter = createProtectedRouter()
       return racebet
     },
   })
+  .query('getAllByMeAndTournamentId', {
+    input: z.string(),
+    async resolve({ ctx, input }) {
+      const racebet = await ctx.prisma.raceBet.findMany({
+        where: { Race: { tournamentId: input, userId: ctx.session.user.id } },
+        include: { firstPlaceDriver: true, secondPlaceDriver: true, thirdPlaceDriver: true, User: true },
+      })
+
+      return racebet
+    },
+  })
   .mutation('upsert', {
     input: z.object({
       raceId: z.string(),
@@ -33,16 +44,16 @@ export const raceBetRouter = createProtectedRouter()
       thirdPlaceDriverId: z.string().nullish(),
     }),
     async resolve({ ctx, input: { raceId, firstPlaceDriverId, secondPlaceDriverId, thirdPlaceDriverId } }) {
-      const userId = ctx.session.user.id
+      const userId = ctx.session.user.id as string
 
       const bet = await ctx.prisma.raceBet.findFirst({ where: { raceId, userId } })
 
       const data = {
         raceId,
+        userId,
         firstPlaceDriverId,
         secondPlaceDriverId,
         thirdPlaceDriverId,
-        userId,
       }
 
       if (bet) {

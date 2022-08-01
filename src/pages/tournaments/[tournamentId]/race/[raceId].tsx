@@ -79,18 +79,21 @@ const Race = (_: Props) => {
 
   const onChangeFirstDriver: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const driver = driversById[e.target.value] || null
+    const driverId = driver?.id || null
     setFirstDriver(driver)
-    upsertBet.mutate({ firstPlaceDriverId: driver?.id, raceId })
+    upsertBet.mutate({ firstPlaceDriverId: driverId, raceId })
   }
   const onChangeSecondDriver: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const driver = driversById[e.target.value] || null
+    const driverId = driver?.id || null
     setSecondDriver(driver)
-    upsertBet.mutate({ secondPlaceDriverId: driver?.id, raceId })
+    upsertBet.mutate({ secondPlaceDriverId: driverId, raceId })
   }
   const onChangeThirdDriver: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const driver = driversById[e.target.value] || null
+    const driverId = driver?.id || null
     setThirdDriver(driver)
-    upsertBet.mutate({ thirdPlaceDriverId: driver?.id, raceId })
+    upsertBet.mutate({ thirdPlaceDriverId: driverId, raceId })
   }
 
   const isOpen = race.data?.startsAt ? (race.data?.startsAt > new Date() ? true : false) : false

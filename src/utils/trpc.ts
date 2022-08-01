@@ -27,3 +27,4 @@ export type inferMutationInput<TRouteKey extends keyof AppRouter['_def']['mutati
 
 export type TRPC_Driver = inferQueryOutput<'racedriver.getAll'>[number]
 export type TRPC_Raceteam = inferQueryOutput<'raceteam.getAll'>[number]
+export type TRPC_Racebet = inferQueryOutput<'racebet.getAllByMeAndTournamentId'>[number]

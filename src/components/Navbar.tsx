@@ -34,7 +34,14 @@ const Navbar = (_: Props) => {
   return (
     <Flex boxShadow="sm" h="64px">
       <Container maxW="container.xl" display="flex" alignItems="center" gap={2}>
-        <Button borderRadius={0} as={CustomLink} href="/" variant="ghost" display="flex" gap={2}>
+        <Button
+          borderRadius={0}
+          as={CustomLink}
+          href={isAuthenticated ? '/tournaments' : '/'}
+          variant="ghost"
+          display="flex"
+          gap={2}
+        >
           <Logo />
           <Text>Quiniela</Text>
           <Badge colorScheme="yellow">beta</Badge>

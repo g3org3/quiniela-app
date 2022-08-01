@@ -1,4 +1,5 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Button, Flex, Heading } from '@chakra-ui/react'
+import { signIn } from 'next-auth/react'
 
 interface Props {
   //
@@ -6,8 +7,9 @@ interface Props {
 
 const Login = (_: Props) => {
   return (
-    <Flex h="30%" alignItems="center" justifyContent="center">
+    <Flex h="30%" alignItems="center" justifyContent="center" flexDir="column" gap={2}>
       <Heading fontWeight="light">please login</Heading>
+      <Button onClick={() => signIn('google')}>Login with Google</Button>
     </Flex>
   )
 }
