@@ -39,12 +39,12 @@ const Races = ({ tournamentId }: Props) => {
           <>
             <Skeleton isLoaded={!races.isLoading} boxShadow="md" borderTopRadius="10px">
               <Button p="0" w="unset" h="unset" variant="ghost" borderTopRadius="10px">
-                <Flex height={{ base: 'unset', md: '237px' }} w={{ base: '100%', md: '355px' }} />
+                <Flex height={{ base: 'unset', md: '237px' }} w={{ base: '100%', md: '340px' }} />
               </Button>
             </Skeleton>
             <Skeleton isLoaded={!races.isLoading} boxShadow="md" borderTopRadius="10px">
               <Button p="0" w="unset" h="unset" variant="ghost" borderTopRadius="10px">
-                <Flex height={{ base: 'unset', md: '237px' }} w={{ base: '100%', md: '355px' }} />
+                <Flex height={{ base: 'unset', md: '237px' }} w={{ base: '100%', md: '340px' }} />
               </Button>
             </Skeleton>
           </>
@@ -82,12 +82,12 @@ const Races = ({ tournamentId }: Props) => {
               <Flex key={race.id} flexDir="column" boxShadow="md">
                 <Image
                   height={{ base: 'unset', md: '200px' }}
-                  w={{ base: '100%', md: '355px' }}
+                  w={{ base: '100%', md: '340px' }}
                   alt="image"
                   src={race.image || undefined}
                   borderTopRadius="10px"
                 />
-                <Flex alignItems="center">
+                <Flex alignItems="center" borderBottom="5px solid" borderColor="purple.600">
                   <Text fontSize="18px" p={2}>
                     {race.name}
                   </Text>

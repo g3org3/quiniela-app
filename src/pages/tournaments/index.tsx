@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Image, Skeleton, Text } from '@chakra-ui/react'
+import { Alert, AlertIcon, Button, Flex, Heading, Image, Skeleton, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 
@@ -20,7 +20,11 @@ const Tournaments: NextPage = () => {
 
   return (
     <Flex flexDir="column" gap={5}>
-      <Heading fontWeight="light">Select a tournament to start betting</Heading>
+      <Heading fontWeight="light">Tournaments</Heading>
+      <Alert>
+        <AlertIcon />
+        Select a tournament to start betting!
+      </Alert>
       <Flex flexWrap="wrap" gap={5}>
         {tournaments.isLoading && (
           <Button
@@ -31,7 +35,7 @@ const Tournaments: NextPage = () => {
             h="unset"
             p="0"
             variant="ghost"
-            w={{ base: '100%', md: '300px' }}
+            w={{ base: '100%', md: '340px' }}
           >
             <Show fallback={<Skeleton borderTopRadius="10px" h="200px" w="100%" />}>
               <Image borderTopRadius="10px" alt="tournament image" objectFit="cover" h="100px" w="100%" />
@@ -54,7 +58,7 @@ const Tournaments: NextPage = () => {
             key={tournament.id}
             p="0"
             variant="ghost"
-            w={{ base: '100%', md: '300px' }}
+            w={{ base: '100%', md: '340px' }}
           >
             <Show
               when={!!tournament.image}

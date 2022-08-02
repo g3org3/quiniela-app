@@ -1,4 +1,16 @@
-import { Alert, Text, AlertIcon, Badge, Button, Flex, Heading, Image, useToast } from '@chakra-ui/react'
+import {
+  Alert,
+  Text,
+  AlertIcon,
+  Badge,
+  Button,
+  Flex,
+  Heading,
+  Image,
+  useToast,
+  Progress,
+  Spinner,
+} from '@chakra-ui/react'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { useEffect, useState } from 'react'
@@ -7,18 +19,24 @@ const SOL = 1000000000
 const Solana = () => {
   const { connection } = useConnection()
   const toast = useToast()
-  const { setVisible } = useWalletModal()
-  const { wallet, disconnect, connected, publicKey } = useWallet()
-  const [status, setStatus] = useState('')
+  const { visible, setVisible } = useWalletModal()
+  const { wallet, disconnect, connected, publicKey, connecting } = useWallet()
+  const [status, setStatus] = useState<'' | 'connecting' | 'sent'>('')
+
+  useEffect(() => {
+    if (!connected && !visible) {
+      setStatus('')
+    }
+  }, [visible])
 
   useEffect(() => {
     const main = async () => {
-      console.log({ connected, status, publicKey: publicKey?.toString() })
       if (connected && status === 'connecting' && publicKey) {
         try {
           const aidropSignature = await connection.requestAirdrop(publicKey, 1 * SOL)
           await connection.confirmTransaction(aidropSignature)
           toast({ title: '1 SOL Sent!', status: 'success' })
+          setStatus('sent')
         } catch (err: any) {
           toast({ title: 'Something went wrong', status: 'error', description: err?.message || err })
         }
@@ -28,16 +46,12 @@ const Solana = () => {
   }, [connected, status, publicKey, connection, toast])
 
   const onClick = async () => {
-    try {
-      if (connected) {
-        disconnect()
-        setStatus('')
-      } else {
-        setStatus('connecting')
-        setVisible(true)
-      }
-    } catch (err) {
-      console.error(err)
+    if (connected) {
+      disconnect()
+      setStatus('')
+    } else {
+      setStatus('connecting')
+      setVisible(true)
     }
   }
 
@@ -49,14 +63,12 @@ const Solana = () => {
           alt="coin"
           src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png"
         />
-        Solana [devnet]
-        <Badge
-          py={1}
-          px={2}
-          variant={connected ? 'solid' : 'outline'}
-          colorScheme={connected ? 'green' : 'red'}
-        >
-          {connected ? 'connected' : 'disconnected'}
+        Solana
+        <Text ml={-2} mt={2} alignSelf="flex-start" fontSize="12px">
+          [devnet]
+        </Text>
+        <Badge variant={connected ? 'solid' : 'subtle'} colorScheme={connected ? 'green' : 'red'}>
+          {connected ? 'connected' : 'not connected'}
         </Badge>
         {wallet && (
           <Flex ml={10} alignItems="center" gap={2}>
@@ -68,17 +80,17 @@ const Solana = () => {
           ml={10}
           onClick={onClick}
           variant={connected ? 'outline' : undefined}
-          colorScheme={connected ? 'red' : 'purple'}
+          colorScheme={connected ? 'red' : undefined}
         >
           {connected ? 'Disconnect' : 'Connect'} Wallet
         </Button>
       </Heading>
       {connected && status === '' ? null : (
-        <Alert status={connected ? 'success' : 'info'}>
-          <AlertIcon />
-          {connected
-            ? '😎 We have sent 1 SOL to your wallet 🔥'
-            : '😎 SUMMER Promotion 🏝 - Connect your wallet today and earn 1 SOL'}
+        <Alert status={connected && status === 'sent' ? 'success' : 'info'}>
+          {status === 'connecting' ? <Spinner mr={2} /> : <AlertIcon />}
+          {status === 'sent' && '😎 We have sent 1 SOL to your wallet 🔥'}
+          {status == 'connecting' && 'Checking'}
+          {status === '' && '😎 SUMMER Promotion 🏝 - Connect your wallet today and earn 1 SOL'}
         </Alert>
       )}
     </Flex>

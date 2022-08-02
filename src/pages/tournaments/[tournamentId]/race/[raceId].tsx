@@ -1,4 +1,15 @@
-import { Badge, Flex, Heading, Image, Select, Skeleton, SkeletonText, Text, useToast } from '@chakra-ui/react'
+import {
+  Badge,
+  Flex,
+  Heading,
+  Image,
+  Select,
+  Skeleton,
+  SkeletonText,
+  Text,
+  useColorModeValue,
+  useToast,
+} from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
@@ -109,12 +120,19 @@ const Race = (_: Props) => {
         gap={2}
         borderTop="1px solid"
         borderBottom="1px solid"
-        borderColor="gray.200"
+        borderColor={useColorModeValue('gray.200', 'gray.700')}
         alignItems="center"
         position="relative"
       >
         {!race.isLoading && !racebet.isLoading && !isOpen && (
-          <Badge colorScheme="purple" fontSize="16px" position="absolute" top="-13px" left="-20px">
+          <Badge
+            colorScheme="purple"
+            variant="solid"
+            fontSize="16px"
+            position="absolute"
+            top="-13px"
+            left="-20px"
+          >
             + {points} points
           </Badge>
         )}
