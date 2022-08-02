@@ -7,6 +7,7 @@ import Head from 'next/head'
 import superjson from 'superjson'
 
 import Layout from 'components/Layout'
+import SolanaProvider from 'components/SolanaProvider'
 import type { AppRouter } from 'server/router'
 import { theme } from 'utils/theme'
 
@@ -23,9 +24,11 @@ const MyApp: AppType = ({ Component, pageProps: { session, ...pageProps } }) => 
       </Head>
       <ChakraProvider theme={theme}>
         <SessionProvider session={session}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <SolanaProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </SolanaProvider>
         </SessionProvider>
       </ChakraProvider>
     </>
