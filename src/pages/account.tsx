@@ -2,18 +2,18 @@ import { CopyIcon } from '@chakra-ui/icons'
 import {
   Avatar,
   AvatarBadge,
-  Badge,
   Flex,
   Heading,
-  Link,
   Icon,
   IconButton,
   Input,
   InputGroup,
   InputLeftAddon,
 } from '@chakra-ui/react'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { useSession } from 'next-auth/react'
-import NextLink from 'next/link'
+
+import Solana from './solana'
 
 interface Props {
   //
@@ -21,10 +21,11 @@ interface Props {
 
 const Account = (_: Props) => {
   const { data } = useSession({ required: true })
+  const { publicKey } = useWallet()
   if (!data?.user) return null
 
   return (
-    <>
+    <Flex flexDir="column" gap={10}>
       <Flex alignItems="center" gap={4}>
         <Avatar src={data.user.image || undefined} size="lg">
           <AvatarBadge boxSize="1.25em" bg="green.300" />
@@ -32,11 +33,6 @@ const Account = (_: Props) => {
         <Heading as="h2" fontWeight="light">
           <Flex gap={4} alignItems="center">
             {data.user.name}
-            <NextLink href="/admin" passHref>
-              <Link>
-                <Badge colorScheme="purple">admin</Badge>
-              </Link>
-            </NextLink>
           </Flex>
           <Flex as="small" fontFamily="monospace" fontSize="16px" gap={2} alignItems="center">
             <IconButton aria-label="copy" size="xs">
@@ -46,13 +42,16 @@ const Account = (_: Props) => {
           </Flex>
         </Heading>
       </Flex>
-      <Flex mt={4}>
+      <Flex flexDir="column" gap={2}>
         <InputGroup>
           <InputLeftAddon>Email</InputLeftAddon>
           <Input disabled name="email" value={data.user.email || undefined} />
         </InputGroup>
       </Flex>
-    </>
+      <hr />
+      <Solana />
+      <hr />
+    </Flex>
   )
 }
 

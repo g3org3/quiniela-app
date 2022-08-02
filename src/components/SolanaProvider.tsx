@@ -4,11 +4,7 @@ import {
 } from '@solana-mobile/wallet-adapter-mobile'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react'
-import {
-  WalletModalProvider,
-  WalletDisconnectButton,
-  WalletMultiButton,
-} from '@solana/wallet-adapter-react-ui'
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import {
   CoinbaseWalletAdapter,
   GlowWalletAdapter,

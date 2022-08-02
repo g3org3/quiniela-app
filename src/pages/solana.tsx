@@ -1,53 +1,86 @@
-import { Button, Flex, Heading, Input } from '@chakra-ui/react'
-import { WalletNotConnectedError } from '@solana/wallet-adapter-base'
+import { Alert, Text, AlertIcon, Badge, Button, Flex, Heading, Image, useToast } from '@chakra-ui/react'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { Keypair, PublicKey, SystemProgram, Transaction } from '@solana/web3.js'
-import React, { FC, useCallback } from 'react'
+import { useWalletModal } from '@solana/wallet-adapter-react-ui'
+import { useEffect, useState } from 'react'
 
-const Solana: FC = () => {
+const SOL = 1000000000
+const Solana = () => {
   const { connection } = useConnection()
-  const { publicKey, sendTransaction } = useWallet()
+  const toast = useToast()
+  const { setVisible } = useWalletModal()
+  const { wallet, disconnect, connected, publicKey } = useWallet()
+  const [status, setStatus] = useState('')
 
-  const onClick = useCallback(async () => {
-    if (!publicKey) throw new WalletNotConnectedError()
-    const balance = await connection.getBalance(publicKey)
-    const info = await connection.getAccountInfo(publicKey)
-    const b = await connection.getBlock(152126366)
-    const aidropSignature = await connection.requestAirdrop(publicKey, 500000000)
-    const co = await connection.confirmTransaction(aidropSignature)
-    console.log({ b })
-    const x = await connection.getBalanceAndContext(publicKey)
-    console.log({ balance, info, key: publicKey.toString(), x })
-    const d = {
-      fromPubkey: publicKey,
-      toPubkey: new PublicKey('6Bv1GbTeoFm5HEYGuwNfvHUbnEbM5UV5evCweWuFXDm6'),
-      lamports: 500000000,
+  useEffect(() => {
+    const main = async () => {
+      console.log({ connected, status, publicKey: publicKey?.toString() })
+      if (connected && status === 'connecting' && publicKey) {
+        try {
+          const aidropSignature = await connection.requestAirdrop(publicKey, 1 * SOL)
+          await connection.confirmTransaction(aidropSignature)
+          toast({ title: '1 SOL Sent!', status: 'success' })
+        } catch (err: any) {
+          toast({ title: 'Something went wrong', status: 'error', description: err?.message || err })
+        }
+      }
     }
-    console.log(d)
-    const transaction = new Transaction().add(SystemProgram.transfer(d))
-    console.log(transaction)
+    main().catch(() => {})
+  }, [connected, status, publicKey, connection, toast])
+
+  const onClick = async () => {
     try {
-      const signature = await sendTransaction(transaction, connection)
-      console.log({ signature })
-      const x = await connection.confirmTransaction(signature, 'processed')
-
-      console.log('success', x)
+      if (connected) {
+        disconnect()
+        setStatus('')
+      } else {
+        setStatus('connecting')
+        setVisible(true)
+      }
     } catch (err) {
-      console.log('failed', err.message)
+      console.error(err)
     }
-  }, [publicKey, sendTransaction, connection])
+  }
 
   return (
     <Flex flexDir="column" gap={5} alignItems="flex-start">
-      <Heading fontWeight="light">Solana | Add your wallet</Heading>
-      <WalletMultiButton style={{ height: '40px' }} />
-      <Flex gap={2} w="60%">
-        <Input type="password" value="6Bv1GbTeoFm5HEYGuwNfvHUbnEbM5UV5evCweWuFXDm6" />
-        <Button colorScheme="blue" onClick={onClick} disabled={!publicKey}>
-          Send
+      <Heading fontWeight="light" display="flex" gap={2} alignItems="center">
+        <Image
+          height="40px"
+          alt="coin"
+          src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png"
+        />
+        Solana [devnet]
+        <Badge
+          py={1}
+          px={2}
+          variant={connected ? 'solid' : 'outline'}
+          colorScheme={connected ? 'green' : 'red'}
+        >
+          {connected ? 'connected' : 'disconnected'}
+        </Badge>
+        {wallet && (
+          <Flex ml={10} alignItems="center" gap={2}>
+            <Image h="40px" alt="wallet icon" src={wallet.adapter.icon || undefined} />
+            <Text>{wallet.adapter.name}</Text>
+          </Flex>
+        )}
+        <Button
+          ml={10}
+          onClick={onClick}
+          variant={connected ? 'outline' : undefined}
+          colorScheme={connected ? 'red' : 'purple'}
+        >
+          {connected ? 'Disconnect' : 'Connect'} Wallet
         </Button>
-      </Flex>
+      </Heading>
+      {connected && status === '' ? null : (
+        <Alert status={connected ? 'success' : 'info'}>
+          <AlertIcon />
+          {connected
+            ? '😎 We have sent 1 SOL to your wallet 🔥'
+            : '😎 SUMMER Promotion 🏝 - Connect your wallet today and earn 1 SOL'}
+        </Alert>
+      )}
     </Flex>
   )
 }
