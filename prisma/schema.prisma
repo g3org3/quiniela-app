@@ -163,7 +163,6 @@ model User {
     emailVerified DateTime?
     image         String?      @db.Text
     role          Role         @default(USER)
-    wallet        String?      @db.Text
     accounts      Account[]
     sessions      Session[]
     tournaments   Tournament[]

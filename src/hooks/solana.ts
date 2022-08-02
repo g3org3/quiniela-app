@@ -31,7 +31,7 @@ export const useSolana = () => {
       const x = await connection.confirmTransaction(signature, 'processed')
 
       console.log('success', x)
-    } catch (err) {
+    } catch (err: any) {
       console.log('failed', err.message)
     }
   }, [publicKey, sendTransaction, connection])
