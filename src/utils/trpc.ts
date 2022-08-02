@@ -25,6 +25,7 @@ export type inferMutationInput<TRouteKey extends keyof AppRouter['_def']['mutati
   AppRouter['_def']['mutations'][TRouteKey]
 >
 
-export type TRPC_Driver = inferQueryOutput<'racedriver.getAll'>[number]
+export type InferDriver<O> = O extends { firstPlaceDriver: infer V } ? V : never
+export type TRPC_Driver = InferDriver<inferQueryOutput<'race.getOneWithDrivers'>>
 export type TRPC_Raceteam = inferQueryOutput<'raceteam.getAll'>[number]
 export type TRPC_Racebet = inferQueryOutput<'racebet.getAllByMeAndTournamentId'>[number]

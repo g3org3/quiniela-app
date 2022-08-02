@@ -11,8 +11,7 @@ interface Props {
 const Admin = (_: Props) => {
   const { data, status } = useSession({ required: true })
 
-  // @ts-ignore
-  if (data?.user.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
+  if (data?.user?.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
 
   return (
     <>

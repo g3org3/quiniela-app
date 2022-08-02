@@ -87,10 +87,9 @@ const Tournaments = (_: Props) => {
   }
 
   const clearForm = () => {
-    Object.keys(setterByField).forEach((field) => {
-      // @ts-ignore
-      setterByField[field]('')
-    })
+    for (const setter of Object.values(setterByField)) {
+      setter('')
+    }
   }
 
   const createMatch = trpc.useMutation('match.create', {
@@ -109,8 +108,7 @@ const Tournaments = (_: Props) => {
     },
   })
 
-  // @ts-ignore
-  if (data?.user.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
+  if (data?.user?.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
   if (!isLoading && !data) return <Unauthorized isLoading={status === 'loading'} />
 
   const isFormDisabled = !homeTeam.trim() || !awayTeam.trim() || !startsAt || createMatch.isLoading
@@ -120,7 +118,6 @@ const Tournaments = (_: Props) => {
   const onValueChange =
     (field: FieldKey): React.ChangeEventHandler<HTMLInputElement> =>
     (e) =>
-      // @ts-ignore
       setterByField[field](e.target.value)
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {

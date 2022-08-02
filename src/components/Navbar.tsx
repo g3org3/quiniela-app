@@ -46,8 +46,7 @@ const Navbar = (_: Props) => {
           <Text>Quiniela</Text>
           <Badge colorScheme="yellow">beta</Badge>
         </Button>
-        {/* @ts-ignore */}
-        <Show when={data?.user.role === 'ADMIN'}>
+        <Show when={data?.user?.role === 'ADMIN'}>
           <Button
             isActive={isInsideAdmin}
             borderRadius={0}

@@ -46,8 +46,7 @@ const Tournaments = (_: Props) => {
     },
   })
 
-  // @ts-ignore
-  if (data?.user.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
+  if (data?.user?.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
 
   const onClickDelete = (id: string) => () => del.mutate(id)
   const onClickToggleStatus = (id: string) => () => toggleStatus.mutate(id)

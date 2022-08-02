@@ -1,29 +1,21 @@
 import {
-  Button,
   Editable,
   EditableInput,
   EditablePreview,
   Flex,
   Heading,
   Image,
-  Input,
-  InputGroup,
-  InputLeftAddon,
   Link,
   Skeleton,
   Spinner,
   useToast,
-  Text,
 } from '@chakra-ui/react'
 import { useSession } from 'next-auth/react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 
 import CreateRace from 'components/admin/CreateRace'
 import Drivers from 'components/admin/Drivers'
-import Matches from 'components/admin/Matches'
-import Teams from 'components/admin/Races'
 import Races from 'components/admin/Races'
 import CustomLink from 'components/CustomLink'
 import Unauthorized from 'components/Unauthorized'
@@ -36,11 +28,6 @@ interface Props {
 const Race = (_: Props) => {
   const { data, status } = useSession({ required: true })
   const { invalidateQueries } = trpc.useContext()
-  const [homeTeam, setHomeTeam] = useState('')
-  const [awayTeam, setAwayTeam] = useState('')
-  const [location, setLocation] = useState('')
-  const [phase, setPhase] = useState('')
-  const [startsAt, setStartsAt] = useState('')
   const router = useRouter()
   const toast = useToast()
   const tournamentId = router.query.tournamentId as string
@@ -74,14 +61,6 @@ const Race = (_: Props) => {
     },
   })
 
-  const setterByField = {
-    homeTeam: setHomeTeam,
-    awayTeam: setAwayTeam,
-    location: setLocation,
-    phase: setPhase,
-    startsAt: setStartsAt,
-  }
-
   const onChangeTitle: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     updateTournamentTitle.mutate({ id: tournamentId, name: e.target.value })
   }
@@ -90,58 +69,8 @@ const Race = (_: Props) => {
     updateTournamentImage.mutate({ id: tournamentId, image: e.target.value })
   }
 
-  const clearForm = () => {
-    Object.keys(setterByField).forEach((field) => {
-      // @ts-ignore
-      setterByField[field]('')
-    })
-  }
-
-  const createMatch = trpc.useMutation('match.create', {
-    onSuccess() {
-      invalidateQueries(['match.getAllByTournamentId'])
-      toast({ variant: 'left-accent', title: 'Match created!', status: 'success' })
-      clearForm()
-    },
-    onError(err) {
-      toast({
-        variant: 'left-accent',
-        title: 'Something went wrong',
-        status: 'error',
-        description: err.message,
-      })
-    },
-  })
-
-  // @ts-ignore
-  if (data?.user.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
+  if (data?.user?.role !== 'ADMIN') return <Unauthorized isLoading={status === 'loading'} />
   if (!isLoading && !data) return <Unauthorized isLoading={status === 'loading'} />
-
-  const isFormDisabled = !homeTeam.trim() || !awayTeam.trim() || !startsAt || createMatch.isLoading
-
-  type FieldKey = keyof typeof setterByField
-
-  const onValueChange =
-    (field: FieldKey): React.ChangeEventHandler<HTMLInputElement> =>
-    (e) =>
-      // @ts-ignore
-      setterByField[field](e.target.value)
-
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault()
-    if (isFormDisabled) return
-
-    const match = {
-      homeTeam,
-      awayTeam,
-      location: !location.trim() ? undefined : location.trim(),
-      phase: !phase.trim() ? undefined : phase.trim(),
-      startsAt: new Date(startsAt),
-      tournamentId,
-    }
-
-    createMatch.mutate(match)
-  }
 
   return (
     <>

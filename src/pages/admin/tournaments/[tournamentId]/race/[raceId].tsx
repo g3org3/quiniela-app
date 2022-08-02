@@ -23,21 +23,20 @@ const Race = (_: Props) => {
   const drivers = trpc.useQuery(['racedriver.getAll'])
   const tournament = trpc.useQuery(['tournament.getOne', tournamentId])
 
-  // TODO: infer the specific key firstDriver of a type
-  const [firstDriver, setFirstDriver] = useState<TRPC_Driver | null>(null)
-  const [secondDriver, setSecondDriver] = useState<TRPC_Driver | null>(null)
-  const [thirdDriver, setThirdDriver] = useState<TRPC_Driver | null>(null)
+  const [firstDriver, setFirstDriver] = useState<TRPC_Driver | undefined>()
+  const [secondDriver, setSecondDriver] = useState<TRPC_Driver | undefined>()
+  const [thirdDriver, setThirdDriver] = useState<TRPC_Driver | undefined>()
 
   useEffect(() => {
-    setFirstDriver(race.data?.firstPlaceDriver as TRPC_Driver)
+    setFirstDriver(race.data?.firstPlaceDriver)
   }, [race.data?.firstPlaceDriverId])
 
   useEffect(() => {
-    setSecondDriver(race.data?.secondPlaceDriver as TRPC_Driver)
+    setSecondDriver(race.data?.secondPlaceDriver)
   }, [race.data?.secondPlaceDriverId])
 
   useEffect(() => {
-    setThirdDriver(race.data?.thirdPlaceDriver as TRPC_Driver)
+    setThirdDriver(race.data?.thirdPlaceDriver)
   }, [race.data?.thirdPlaceDriverId])
 
   const upsertRaceDrivers = trpc.useMutation('race.upsertDrivers', {
@@ -59,7 +58,6 @@ const Race = (_: Props) => {
   const driversById =
     drivers.data?.reduce<Record<string, TRPC_Driver>>((_byId, driver) => {
       if (!_byId[driver.id]) {
-        // @ts-ignore
         _byId[driver.id] = driver
         if (!teamsById[driver.raceTeamId]) {
           teamsById[driver.raceTeamId] = driver.raceteam
