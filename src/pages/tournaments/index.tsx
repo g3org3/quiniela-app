@@ -49,7 +49,8 @@ const Tournaments: NextPage = () => {
         {tournaments.data?.map((tournament) => (
           <Button
             as={CustomLink}
-            borderRadius="10px"
+            borderRadius="0"
+            borderTopRadius="10px"
             boxShadow="md"
             display="flex"
             flexDir="column"
@@ -58,6 +59,10 @@ const Tournaments: NextPage = () => {
             key={tournament.id}
             p="0"
             variant="ghost"
+            border="1px solid"
+            borderColor="#eee"
+            borderBottom="5px solid"
+            borderBottomColor="red"
             w={{ base: '100%', md: '340px' }}
           >
             <Show

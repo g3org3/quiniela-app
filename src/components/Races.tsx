@@ -79,6 +79,17 @@ const Races = ({ tournamentId }: Props) => {
                   {points}
                 </Badge>
               )}
+              <Badge
+                position="absolute"
+                top="-5px"
+                right="-10px"
+                colorScheme={isOpen ? 'green' : 'red'}
+                variant="solid"
+                py={1}
+                px={3}
+              >
+                {isOpen ? 'open' : 'closed'}
+              </Badge>
               <Flex key={race.id} flexDir="column" boxShadow="md">
                 <Image
                   height={{ base: 'unset', md: '200px' }}
@@ -91,9 +102,6 @@ const Races = ({ tournamentId }: Props) => {
                   <Text fontSize="18px" p={2}>
                     {race.name}
                   </Text>
-                  <Badge colorScheme={isOpen ? 'green' : 'red'} variant="outline" py={1} px={3}>
-                    {isOpen ? 'open' : 'closed'}
-                  </Badge>
                   <Spacer />
                   <Text fontWeight="light" px={2}>
                     {DateTime.fromJSDate(race.startsAt).toRelative()}

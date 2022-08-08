@@ -8,7 +8,6 @@ import {
   Heading,
   Image,
   useToast,
-  Progress,
   Spinner,
 } from '@chakra-ui/react'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'

@@ -81,9 +81,6 @@ const Navbar = (_: Props) => {
               <MenuItem as={CustomLink} href="/account">
                 Account
               </MenuItem>
-              <MenuItem as={CustomLink} href="/solana">
-                Crypto Wallet
-              </MenuItem>
               <MenuDivider />
               <MenuItem onClick={onClickLogout}>Logout</MenuItem>
             </MenuList>

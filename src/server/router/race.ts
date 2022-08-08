@@ -1,36 +1,48 @@
+import { Race, RaceDriver } from '@prisma/client'
 import { z } from 'zod'
+
+import { createCache } from 'utils/cache'
 
 import { createProtectedRouter, isAdminOrThrow } from './protected-router'
 
+type R = Race & {
+  firstPlaceDriver: RaceDriver | null
+  secondPlaceDriver: RaceDriver | null
+  thirdPlaceDriver: RaceDriver | null
+}
+const cacheMany = createCache<R[]>('race')
+const cacheOne = createCache<R>('race')
+
 export const raceRouter = createProtectedRouter()
   .query('getAll', {
+    meta: { cache: cacheMany },
     input: z.string(),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.race.findMany({
-        where: { tournamentId: input },
-        orderBy: { startsAt: 'asc' },
-        include: {
-          firstPlaceDriver: true,
-          secondPlaceDriver: true,
-          thirdPlaceDriver: true,
-        },
-      })
-    },
+    // eslint-disable-next-line
+    resolve: async ({ ctx, input }) => cacheMany.next('getAll', input, async () => {
+        return await ctx.prisma.race.findMany({
+          where: { tournamentId: input, startsAt: { gt: new Date() } },
+          orderBy: { startsAt: 'asc' },
+          include: {
+            firstPlaceDriver: true,
+            secondPlaceDriver: true,
+            thirdPlaceDriver: true,
+          },
+        })
+      }),
   })
   .query('getOne', {
     input: z.string(),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.race.findFirstOrThrow({ where: { id: input } })
-    },
+    resolve: async ({ ctx, input }) => await ctx.prisma.race.findFirstOrThrow({ where: { id: input } }),
   })
   .query('getOneWithDrivers', {
     input: z.string(),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.race.findFirstOrThrow({
-        where: { id: input },
-        include: { firstPlaceDriver: true, secondPlaceDriver: true, thirdPlaceDriver: true },
-      })
-    },
+    // eslint-disable-next-line
+    resolve: async ({ ctx, input }) => cacheOne.next('getOneWithDrivers', input, async () => {
+        return await ctx.prisma.race.findFirstOrThrow({
+          where: { id: input },
+          include: { firstPlaceDriver: true, secondPlaceDriver: true, thirdPlaceDriver: true },
+        })
+      }),
   })
   .mutation('upsertDrivers', {
     input: z.object({
@@ -72,6 +84,8 @@ export const raceRouter = createProtectedRouter()
         tournamentId,
         userId,
       }
+
+      cacheMany.invalidate()
 
       return await ctx.prisma.race.create({ data })
     },

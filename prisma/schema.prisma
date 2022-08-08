@@ -120,12 +120,16 @@ model Race {
     id                  String      @id @default(cuid())
     startsAt            DateTime
     name                String
+    round               String?
     circuit             String?
+    country             String?
+    city                String?
     image               String?     @db.Text
-    Tournament          Tournament? @relation(fields: [tournamentId], references: [id])
+    // relations
+    tournament          Tournament? @relation(fields: [tournamentId], references: [id])
     tournamentId        String?
     bets                RaceBet[]
-    User                User?       @relation(fields: [userId], references: [id])
+    user                User?       @relation(fields: [userId], references: [id])
     userId              String?
     firstPlaceDriverId  String?
     secondPlaceDriverId String?
@@ -136,18 +140,25 @@ model Race {
 }
 
 model RaceTeam {
-    id      String       @id @default(cuid())
-    name    String
-    image   String?      @db.Text
-    drivers RaceDriver[]
+    id          String       @id @default(cuid())
+    name        String
+    nationality String?
+    image       String?      @db.Text
+    drivers     RaceDriver[]
 }
 
 model RaceDriver {
     id               String    @id @default(cuid())
     name             String
     image            String?   @db.Text
-    raceteam         RaceTeam  @relation(fields: [raceTeamId], references: [id])
-    raceTeamId       String
+    nationality      String?
+    dateOfBirth      String?
+    permanentNumber  String?
+    code             String?
+    // Relations
+    raceteam         RaceTeam? @relation(fields: [raceTeamId], references: [id])
+    raceTeamId       String?
+    //
     firstPlaceRaces  Race[]    @relation("firstDriver")
     secondPlaceRaces Race[]    @relation("secondDriver")
     thirdPlaceRaces  Race[]    @relation("thirdDriver")

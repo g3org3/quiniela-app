@@ -30,8 +30,8 @@ const Drivers = (props: Props) => {
               </Td>
               <Td>
                 <Flex alignItems="center" gap={2}>
-                  <Image alt="team logo" h="50px" src={driver.raceteam.image || undefined} />
-                  {driver.raceteam.name}
+                  <Image alt="team logo" h="50px" src={driver.raceteam?.image || undefined} />
+                  {driver.raceteam?.name}
                 </Flex>
               </Td>
             </Tr>
