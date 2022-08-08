@@ -78,7 +78,7 @@ const Race = (_: Props) => {
     drivers.data?.reduce<Record<string, TRPC_Driver>>((_byId, driver) => {
       if (!_byId[driver.id]) {
         _byId[driver.id] = driver
-        if (!teamsById[driver.raceTeamId]) {
+        if (driver.raceTeamId && !teamsById[driver.raceTeamId] && driver.raceteam) {
           teamsById[driver.raceTeamId] = driver.raceteam
         }
       }
