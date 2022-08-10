@@ -30,9 +30,10 @@ async function main() {
     )
   })
 }
-main()
-  .then(() => teams())
-  .then(() => races())
+// main()
+//   .then(() => teams())
+//   .then(() => races())
+// races()
 
 async function teams() {
   // create teams
@@ -110,8 +111,8 @@ async function races() {
       country,
       city: locality,
       startsAt: new Date(race.date + 'T' + race.time),
-      userId: 'cl6k911pj0008ckyquz40syrv',
-      tournamentId: 'cl6k92ubn0106ckyqq98cazqh',
+      userId: 'cl6jwqbia00244qyqs9q033th',
+      tournamentId: 'cl6jwrf0300834qyqkm9qhd1v',
     }
     const optionalItem = await prisma.race.findFirst({ where: { name: raceName } })
 

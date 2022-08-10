@@ -1,4 +1,14 @@
-import { Alert, AlertIcon, Button, Flex, Heading, Image, Skeleton, Text } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Skeleton,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 
@@ -8,6 +18,7 @@ import { trpc } from 'utils/trpc'
 
 const Tournaments: NextPage = () => {
   useSession({ required: true })
+  const gray = useColorModeValue('#eee', 'gray.700')
   const { prefetchQuery } = trpc.useContext()
   const tournaments = trpc.useQuery(['tournament.getAllActive'], {
     onSuccess(tournaments) {
@@ -60,9 +71,9 @@ const Tournaments: NextPage = () => {
             p="0"
             variant="ghost"
             border="1px solid"
-            borderColor="#eee"
+            borderColor={gray}
             borderBottom="5px solid"
-            borderBottomColor="red"
+            borderBottomColor="red.700"
             w={{ base: '100%', md: '340px' }}
           >
             <Show

@@ -14,6 +14,12 @@ async function main() {
   const content = readFileSync(filepath).toString()
   const data = JSON.parse(content)
 
+  const user = await prisma.user.findFirstOrThrow({ where: { email: '7jagjag@gmail.com' } })
+  const optionalTournament = await prisma.tournament.findFirst({ where: { name: 'World Cup 2022' } })
+  const tournament =
+    optionalTournament ||
+    (await prisma.tournament.create({ data: { userId: user.id, name: 'World Cup 2022' } }))
+
   const schema = z
     .object({
       MatchNumber: z.number(),
@@ -39,14 +45,14 @@ async function main() {
         awayTeam: match.AwayTeam,
         phase: match.RoundNumber > 3 ? phase[match.RoundNumber] : match.Group,
         location: match.Location,
-        tournamentId: 'cl68rbkkr0084v3yqhq02yg3r',
+        tournamentId: tournament.id,
       }
       console.log(match.DateUtc, data)
       await prisma.match.create({ data })
     }
   } catch (err) {
-    // console.log(err)
-    console.error('Invalid type')
+    console.log(err)
+    // console.error('Invalid type')
   }
 }
 main()
