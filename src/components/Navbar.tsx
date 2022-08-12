@@ -60,32 +60,30 @@ const Navbar = (_: Props) => {
           </Button>
         </Show>
         <Spacer />
-        <Show
-          when={isAuthenticated}
-          fallback={
-            <Button isLoading={status === 'loading'} onClick={onClickLogin} variant="ghost">
-              Login
-            </Button>
-          }
-        >
-          <Menu>
-            <MenuButton borderRadius={0} as={Button} variant="ghost" rightIcon={<ChevronDownIcon />}>
-              <Flex alignItems="center" gap={2}>
-                <Avatar name={data?.user?.name || undefined} src={data?.user?.image || undefined} size="sm">
-                  <AvatarBadge boxSize="1em" bg="green.300" />
-                </Avatar>
-                {data?.user?.name}
-              </Flex>
-            </MenuButton>
-            <MenuList>
-              <MenuItem as={CustomLink} href="/account">
-                Account
-              </MenuItem>
-              <MenuDivider />
-              <MenuItem onClick={onClickLogout}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
-        </Show>
+
+        <Menu>
+          <MenuButton
+            disabled={status !== 'authenticated'}
+            borderRadius={0}
+            as={Button}
+            variant="ghost"
+            rightIcon={<ChevronDownIcon />}
+          >
+            <Flex alignItems="center" gap={2}>
+              <Avatar name={data?.user?.name || undefined} src={data?.user?.image || undefined} size="sm">
+                {status === 'authenticated' && <AvatarBadge boxSize="1em" bg="green.300" />}
+              </Avatar>
+              {data?.user?.name}
+            </Flex>
+          </MenuButton>
+          <MenuList>
+            <MenuItem as={CustomLink} href="/account">
+              Account
+            </MenuItem>
+            <MenuDivider />
+            <MenuItem onClick={onClickLogout}>Logout</MenuItem>
+          </MenuList>
+        </Menu>
       </Container>
     </Flex>
   )
