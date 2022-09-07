@@ -9,8 +9,6 @@ export const raceBetRouter = createProtectedRouter()
   .query('getOneByRaceId', {
     input: z.string(),
     async resolve({ ctx, input }) {
-      console.log('-> racebet.getOneByRaceId', input)
-
       const data = await ctx.prisma.raceBet.findFirst({
         where: { raceId: input, userId: ctx.session.user.id },
         include: { User: true, firstPlaceDriver: true, secondPlaceDriver: true, thirdPlaceDriver: true },
@@ -105,8 +103,6 @@ export const raceBetRouter = createProtectedRouter()
   .query('getAllByMeAndTournamentId', {
     input: z.string(),
     async resolve({ ctx, input }) {
-      console.log('-> racebet.getAllByMeAndTournamentId', input)
-
       const racebet = await ctx.prisma.raceBet.findMany({
         where: { Race: { tournamentId: input, userId: ctx.session.user.id } },
         include: { firstPlaceDriver: true, secondPlaceDriver: true, thirdPlaceDriver: true, User: true },

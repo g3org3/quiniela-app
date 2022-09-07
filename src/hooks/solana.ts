@@ -14,25 +14,18 @@ export const useSolana = () => {
     const b = await connection.getBlock(152126366)
     const aidropSignature = await connection.requestAirdrop(publicKey, 500000000)
     const co = await connection.confirmTransaction(aidropSignature)
-    console.log({ b })
     const x = await connection.getBalanceAndContext(publicKey)
-    console.log({ balance, info, key: publicKey.toString(), x })
     const d = {
       fromPubkey: publicKey,
       toPubkey: new PublicKey('6Bv1GbTeoFm5HEYGuwNfvHUbnEbM5UV5evCweWuFXDm6'),
       lamports: 500000000,
     }
-    console.log(d)
     const transaction = new Transaction().add(SystemProgram.transfer(d))
-    console.log(transaction)
     try {
       const signature = await sendTransaction(transaction, connection)
-      console.log({ signature })
       const x = await connection.confirmTransaction(signature, 'processed')
-
-      console.log('success', x)
     } catch (err: any) {
-      console.log('failed', err.message)
+      //
     }
   }, [publicKey, sendTransaction, connection])
 }

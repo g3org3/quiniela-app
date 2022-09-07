@@ -16,13 +16,6 @@ const Home: NextPage = () => {
     }
   }, [router, status])
 
-  if (status === 'loading')
-    return (
-      <Flex h="30%" alignItems="center" justifyContent="center">
-        <Spinner />
-      </Flex>
-    )
-
   if (!data) return <Login />
 
   return null
