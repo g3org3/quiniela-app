@@ -16,18 +16,18 @@ export const createCache = <T>(_label: string) => {
     }
   }
 
-  const next = async (label: string, key: K, db: () => Promise<T | null>): Promise<T | null> => {
+  const next = async <G>(label: string, key: K, db: () => Promise<G>): Promise<G> => {
     console.log('-> ' + _label + '.' + label)
     const cacheHit = _cache.get(key)
 
     if (cacheHit) {
       console.log('   <- [cache-hit] ', key)
 
-      return Promise.resolve(cacheHit)
+      // return Promise.resolve(cacheHit)
     }
 
     const data = await db()
-    _cache.set(key, data)
+    // _cache.set(key, data)
 
     return data
   }

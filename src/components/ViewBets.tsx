@@ -22,6 +22,7 @@ const ViewBets = ({ race, raceId, isOpen }: Props) => {
             <Th>1st Place</Th>
             <Th>2nd Place</Th>
             <Th>3rd Place</Th>
+            <Th>Points</Th>
           </Tr>
         </Thead>
         <Tbody>

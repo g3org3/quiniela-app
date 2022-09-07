@@ -9,8 +9,8 @@ const colors = {
 }
 
 const config: ThemeConfig = {
-  initialColorMode: 'system',
-  useSystemColorMode: true,
+  initialColorMode: 'light',
+  useSystemColorMode: false,
 }
 
 export const theme = extendTheme({ colors, config })

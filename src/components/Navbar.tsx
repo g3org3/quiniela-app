@@ -59,6 +59,9 @@ const Navbar = (_: Props) => {
             <Text>Torneos</Text>
           </Button>
         </Show>
+        <Button borderRadius={0} as={CustomLink} href="/groups" variant="ghost" display="flex" gap={2}>
+          <Text>Groups</Text>
+        </Button>
         <Spacer />
 
         <Menu>

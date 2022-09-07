@@ -167,13 +167,33 @@ model RaceDriver {
     thirdPlaceBets   RaceBet[] @relation("thirdDriverBet")
 }
 
+model Group {
+    id            String          @id @default(cuid())
+    name          String
+    code          String?         @unique
+    created_at    DateTime        @default(now())
+    created_by    User            @relation(fields: [created_by_id], references: [id])
+    created_by_id String
+    users         UsersOnGroups[]
+}
+
+model UsersOnGroups {
+    group      Group    @relation(fields: [groupId], references: [id])
+    groupId    String
+    userId     String
+    User       User     @relation(fields: [userId], references: [id])
+    created_at DateTime @default(now())
+
+    @@id([groupId, userId])
+}
+
 model User {
-    id            String       @id @default(cuid())
+    id            String          @id @default(cuid())
     name          String?
-    email         String?      @unique
+    email         String?         @unique
     emailVerified DateTime?
-    image         String?      @db.Text
-    role          Role         @default(USER)
+    image         String?         @db.Text
+    role          Role            @default(USER)
     accounts      Account[]
     sessions      Session[]
     tournaments   Tournament[]
@@ -181,6 +201,8 @@ model User {
     bets          Bet[]
     racebets      RaceBet[]
     races         Race[]
+    myGroups      Group[]
+    joinedGroups  UsersOnGroups[]
 }
 
 model VerificationToken {

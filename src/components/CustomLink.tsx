@@ -1,15 +1,14 @@
-import { Link } from '@chakra-ui/react'
+import { Link, LinkProps } from '@chakra-ui/react'
 import NextLink from 'next/link'
 
-interface Props {
-  children: JSX.Element | JSX.Element[] | string
+interface Props extends LinkProps {
   href: string
 }
 
-const CustomLink = ({ children, href, ...props }: Props) => {
+const CustomLink = ({ href, ...props }: Props) => {
   return (
     <NextLink href={href} passHref>
-      <Link {...props}>{children}</Link>
+      <Link {...props} />
     </NextLink>
   )
 }

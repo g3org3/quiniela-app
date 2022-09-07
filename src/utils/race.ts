@@ -1,6 +1,6 @@
 export const getPoints = (race: any, racebet: any) => {
   if (!race || !racebet) return { points: 0 }
-  console.log(race, racebet)
+
   let points = 0
   const isFirstOk = race.firstPlaceDriverId === racebet.firstPlaceDriverId
   if (isFirstOk) {

@@ -8,9 +8,12 @@ import {
   Skeleton,
   Text,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 import CustomLink from 'components/CustomLink'
 import Show from 'components/Show'
@@ -18,8 +21,16 @@ import { trpc } from 'utils/trpc'
 
 const Tournaments: NextPage = () => {
   useSession({ required: true })
+  const router = useRouter()
+  const toaster = useToast()
   const gray = useColorModeValue('#eee', 'gray.700')
   const { prefetchQuery } = trpc.useContext()
+  const joinGroup = trpc.useMutation('group.join', {
+    onSuccess(group) {
+      toaster({ title: 'Joined group ' + group.name, status: 'success' })
+      router.push('/tournaments')
+    },
+  })
   const tournaments = trpc.useQuery(['tournament.getAllActive'], {
     onSuccess(tournaments) {
       for (const t of tournaments) {
@@ -28,6 +39,12 @@ const Tournaments: NextPage = () => {
       }
     },
   })
+
+  useEffect(() => {
+    if (router.query.joinGroup && typeof router.query.joinGroup === 'string') {
+      joinGroup.mutate(router.query.joinGroup)
+    }
+  }, [router.query.joinGroup])
 
   return (
     <Flex flexDir="column" gap={5}>
