@@ -49,7 +49,7 @@ function DrawerExample() {
   return (
     <>
       <Button ref={btnRef as never} colorScheme="teal" onClick={onOpen}>
-        create new group
+        new group
       </Button>
       <Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef as never}>
         <DrawerOverlay />
@@ -93,7 +93,10 @@ const ButtonCard = ({ id, title }: { id: string; title: string }) => {
       <CustomLink href={`/groups/${id}`} flex={1} p={2}>
         <Text>{title}</Text>
       </CustomLink>
-      <Button colorScheme="twitter" onClick={onClick}>
+      <Button as={CustomLink} href={`/groups/${id}`} size="sm" onClick={onClick}>
+        view leaderboard
+      </Button>
+      <Button variant="outline" size="sm" colorScheme="twitter" onClick={onClick}>
         copy link to share
       </Button>
     </Flex>
@@ -105,7 +108,7 @@ const Groups = () => {
   const myGroups = trpc.useQuery(['group.getAllMine'])
 
   return (
-    <Flex flexDir="column" pt={5} gap={5}>
+    <Flex flexDir="column" gap={5}>
       <Heading display="flex" fontWeight="light">
         <Text>Groups</Text>
         <Spacer />

@@ -11,7 +11,7 @@ const Group = () => {
   const leaderboard = trpc.useQuery(['racebet.getAllByGroupId', groupId])
 
   return (
-    <Flex flexDir="column" pt={5} gap={5}>
+    <Flex flexDir="column" gap={5}>
       <Heading fontWeight="light" textTransform="capitalize">
         <CustomLink href="/groups">Groups</CustomLink> / {group.data?.name} - Bets
       </Heading>

@@ -20,7 +20,7 @@ const UserIdBets = ({ race, raceId, isOpen }: Props) => {
   const history = trpc.useQuery(['racebet.getAllByUserId', userId])
 
   return (
-    <Flex flexDir="column" pt={5} gap={5}>
+    <Flex flexDir="column" gap={5}>
       <Heading fontWeight="light" textTransform="capitalize">
         <CustomLink href="/groups">Groups</CustomLink> /{' '}
         <CustomLink href={`/groups/${groupId}`}>{group.data?.name} - Bets</CustomLink> / {user.data?.name}
