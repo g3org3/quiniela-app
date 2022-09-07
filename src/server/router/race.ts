@@ -1,4 +1,5 @@
 import { Race, RaceDriver } from '@prisma/client'
+import { DateTime } from 'luxon'
 import { z } from 'zod'
 
 import { createCache } from 'utils/cache'
@@ -19,8 +20,10 @@ export const raceRouter = createProtectedRouter()
     input: z.string(),
     // eslint-disable-next-line
     resolve: async ({ ctx, input }) => cacheMany.next('getAll', input, async () => {
+        const todayAndLast5Days = DateTime.now().minus({ days: 10 })
+
         return await ctx.prisma.race.findMany({
-          where: { tournamentId: input, startsAt: { gt: new Date() } },
+          where: { tournamentId: input, startsAt: { gt: todayAndLast5Days.toJSDate() } },
           orderBy: { startsAt: 'asc' },
           include: {
             firstPlaceDriver: true,

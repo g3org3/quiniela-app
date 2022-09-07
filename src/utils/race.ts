@@ -1,5 +1,15 @@
 export const getPoints = (race: any, racebet: any) => {
-  if (!race || !racebet) return { points: 0 }
+  if (
+    !race ||
+    !racebet ||
+    !race.firstPlaceDriver ||
+    !race.secondPlaceDriver ||
+    !race.thirdPlaceDriver ||
+    !racebet.firstPlaceDriver ||
+    !racebet.secondPlaceDriver ||
+    !racebet.thirdPlaceDriver
+  )
+    return { points: 0 }
 
   let points = 0
   const isFirstOk = race.firstPlaceDriverId === racebet.firstPlaceDriverId

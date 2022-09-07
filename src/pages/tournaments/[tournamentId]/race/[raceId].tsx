@@ -74,13 +74,17 @@ const Race = (_: Props) => {
   })
 
   const teamsById: Record<string, TRPC_Raceteam> = {}
+  const teamsWDriversByTeamId: Record<string, { team: TRPC_Raceteam; drivers: TRPC_Driver[] }> = {}
   const driversById =
     drivers.data?.reduce<Record<string, TRPC_Driver>>((_byId, driver) => {
-      if (!_byId[driver.id]) {
-        _byId[driver.id] = driver
-        if (driver.raceTeamId && !teamsById[driver.raceTeamId] && driver.raceteam) {
-          teamsById[driver.raceTeamId] = driver.raceteam
+      if (_byId[driver.id]) return _byId
+      _byId[driver.id] = driver
+      if (driver.raceTeamId && !teamsById[driver.raceTeamId] && driver.raceteam) {
+        teamsById[driver.raceTeamId] = driver.raceteam
+        if (!teamsWDriversByTeamId[driver.raceTeamId]) {
+          teamsWDriversByTeamId[driver.raceTeamId] = { team: driver.raceteam, drivers: [] }
         }
+        teamsWDriversByTeamId[driver.raceTeamId]?.drivers.push(driver)
       }
 
       return _byId
@@ -179,7 +183,17 @@ const Race = (_: Props) => {
               disabled={upsertBet.isLoading || !isOpen}
               onChange={onChangeFirstDriver}
             >
-              <option value="">choose a driver</option>
+              <option value="">choose a driver2</option>
+              {Object.values(teamsWDriversByTeamId).map((t) => (
+                <>
+                  <option value="">-- {t.team.name} --</option>
+                  {t.drivers.map((driver) => (
+                    <option key={driver?.id} value={driver?.id}>
+                      {driver?.name}
+                    </option>
+                  ))}
+                </>
+              ))}
               {drivers.data?.map((driver) => (
                 <option key={driver.id} value={driver.id}>
                   {driver.name}
@@ -367,7 +381,7 @@ const Race = (_: Props) => {
           </Skeleton>
         </Flex>
       </Flex>
-      <ViewBets raceId={raceId} race={race} isOpen={isOpen} />
+      <ViewBets raceId={raceId} race={race.data} isOpen={isOpen} />
     </Flex>
   )
 }
