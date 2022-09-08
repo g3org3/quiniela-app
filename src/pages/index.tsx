@@ -12,7 +12,8 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/tournaments')
+      const qs = typeof router.query.joinGroup === 'string' ? `?=${router.query.joinGroup}` : ''
+      router.push('/tournaments' + qs)
     }
   }, [router, status])
 
