@@ -7,11 +7,11 @@ import { createProtectedRouter, isAdminOrThrow } from './protected-router'
 type R = RaceDriver & {
   raceteam: RaceTeam | null
 }
-const cacheOne = createCache<R[]>('racedriver')
+const cacheMany = createCache<R[]>('racedriver')
 
 export const racedriverRouter = createProtectedRouter().query('getAll', {
-  resolve: async ({ ctx }) =>
-    cacheOne.next('getAll', 'getAll', async () => {
+  // eslint-disable-next-line
+  resolve: async ({ ctx }) => cacheMany.next('getAll', 'getAll', async () => {
       return await ctx.prisma.raceDriver.findMany({ include: { raceteam: true } })
     }),
 })

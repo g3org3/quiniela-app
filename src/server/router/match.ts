@@ -9,6 +9,12 @@ export const matchRouter = createProtectedRouter()
       return await ctx.prisma.match.findMany({ orderBy: { startsAt: 'asc' }, where: { tournamentId: input } })
     },
   })
+  .query('getOneById', {
+    input: z.string(),
+    resolve: async ({ ctx, input }) => {
+      return await ctx.prisma.match.findUniqueOrThrow({ where: { id: input }, include: { Tournament: true } })
+    },
+  })
   .mutation('delete', {
     input: z.string(),
     resolve: async ({ ctx, input }) => {
@@ -20,7 +26,9 @@ export const matchRouter = createProtectedRouter()
   .mutation('create', {
     input: z.object({
       homeTeam: z.string(),
+      homeTeamUrl: z.string(),
       awayTeam: z.string(),
+      awayTeamUrl: z.string(),
       location: z.string().nullish(),
       phase: z.string().nullish(),
       startsAt: z.date(),
@@ -28,16 +36,19 @@ export const matchRouter = createProtectedRouter()
     }),
     resolve: async ({ ctx, input }) => {
       const userId = isAdminOrThrow(ctx)
-      const match = {
-        homeTeam: input.homeTeam,
-        awayTeam: input.awayTeam,
-        location: input.location,
-        phase: input.phase,
-        startsAt: input.startsAt,
-        tournamentId: input.tournamentId,
-        userId,
-      }
 
-      return ctx.prisma.match.create({ data: match })
+      return ctx.prisma.match.create({
+        data: {
+          homeTeam: input.homeTeam,
+          homeTeamImage: input.homeTeamUrl,
+          awayTeam: input.awayTeam,
+          awayTeamImage: input.awayTeamUrl,
+          location: input.location,
+          phase: input.phase,
+          startsAt: input.startsAt,
+          tournamentId: input.tournamentId,
+          userId,
+        },
+      })
     },
   })

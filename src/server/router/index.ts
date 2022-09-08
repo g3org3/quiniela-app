@@ -1,6 +1,7 @@
 // src/server/router/index.ts
 import superjson from 'superjson'
 
+import { betRouter } from './bet'
 import { createRouter } from './context'
 import { groupRouter } from './group'
 import { matchRouter } from './match'
@@ -21,6 +22,7 @@ export const appRouter = createRouter()
   .merge('racebet.', raceBetRouter)
   .merge('user.', userRouter)
   .merge('group.', groupRouter)
+  .merge('bet.', betRouter)
 
 // export type definition of API
 export type AppRouter = typeof appRouter

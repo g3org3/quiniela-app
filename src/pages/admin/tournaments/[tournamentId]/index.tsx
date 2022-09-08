@@ -33,7 +33,9 @@ const Tournaments = (_: Props) => {
   const { data, status } = useSession({ required: true })
   const { invalidateQueries } = trpc.useContext()
   const [homeTeam, setHomeTeam] = useState('')
+  const [homeTeamUrl, setHomeTeamUrl] = useState('')
   const [awayTeam, setAwayTeam] = useState('')
+  const [awayTeamUrl, setAwayTeamUrl] = useState('')
   const [location, setLocation] = useState('')
   const [phase, setPhase] = useState('')
   const [startsAt, setStartsAt] = useState('')
@@ -72,7 +74,9 @@ const Tournaments = (_: Props) => {
 
   const setterByField = {
     homeTeam: setHomeTeam,
+    homeTeamUrl: setHomeTeamUrl,
     awayTeam: setAwayTeam,
+    awayTeamUrl: setAwayTeamUrl,
     location: setLocation,
     phase: setPhase,
     startsAt: setStartsAt,
@@ -126,7 +130,9 @@ const Tournaments = (_: Props) => {
 
     const match = {
       homeTeam,
+      homeTeamUrl,
       awayTeam,
+      awayTeamUrl,
       location: !location.trim() ? undefined : location.trim(),
       phase: !phase.trim() ? undefined : phase.trim(),
       startsAt: new Date(startsAt),
@@ -197,6 +203,29 @@ const Tournaments = (_: Props) => {
                     onChange={onValueChange('awayTeam')}
                     name="awayTeam"
                     placeholder="awayTeam"
+                  />
+                </InputGroup>
+              </Flex>
+              <Flex gap={2} alignItems="center">
+                <InputGroup>
+                  <InputLeftAddon>homeUrl</InputLeftAddon>
+                  <Input
+                    value={homeTeamUrl}
+                    disabled={createMatch.isLoading}
+                    onChange={onValueChange('homeTeamUrl')}
+                    name="homeTeamUrl"
+                    placeholder="homeTeamUrl"
+                  />
+                </InputGroup>
+                vs
+                <InputGroup>
+                  <InputLeftAddon>awayUrl</InputLeftAddon>
+                  <Input
+                    value={awayTeamUrl}
+                    disabled={createMatch.isLoading}
+                    onChange={onValueChange('awayTeamUrl')}
+                    name="awayTeamUrl"
+                    placeholder="awayTeamUrl"
                   />
                 </InputGroup>
               </Flex>

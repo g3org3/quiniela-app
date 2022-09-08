@@ -1,3 +1,9 @@
+import chalk from 'chalk'
+
+const log = (...args: string[]) => {
+  console.log(chalk.yellow('cache'), '-', ...args)
+}
+
 export const createCache = <T>(_label: string) => {
   let _cache = new Map<string, T | null>()
   type KeyOf<O> = O extends Map<infer V, T | null> ? V : never
@@ -16,21 +22,37 @@ export const createCache = <T>(_label: string) => {
     }
   }
 
-  const next = async <G>(label: string, key: K, db: () => Promise<G>): Promise<G> => {
-    console.log('-> ' + _label + '.' + label)
+  const next = async (label: string, key: K, db: () => Promise<T>) => {
+    log(_label + '.' + label)
     const cacheHit = _cache.get(key)
 
     if (cacheHit) {
-      console.log('   <- [cache-hit] ', key)
+      log('[' + chalk.green('hit') + '] ', key)
 
-      // return Promise.resolve(cacheHit)
+      return Promise.resolve(cacheHit)
     }
-
+    log('[' + chalk.red('miss') + '] ', key)
     const data = await db()
-    // _cache.set(key, data)
+    _cache.set(key, data)
 
     return data
   }
 
-  return { next, invalidate, invalidatAll: () => invalidate() }
+  const nextNullable = async (label: string, key: K, db: () => Promise<T | null>) => {
+    log(_label + '.' + label)
+    const cacheHit = _cache.get(key)
+
+    if (cacheHit) {
+      log('[' + chalk.green('hit') + '] ', key)
+
+      return Promise.resolve(cacheHit)
+    }
+    log('[' + chalk.red('miss') + '] ', key)
+    const data = await db()
+    _cache.set(key, data)
+
+    return data
+  }
+
+  return { next, nextNullable, invalidate, invalidatAll: () => invalidate() }
 }

@@ -38,9 +38,9 @@ const Matches = ({ tournamentId, isAdmin }: Props) => {
             <Th>away</Th>
             <Th>score</Th>
             <Th>start at</Th>
-            <Th>status</Th>
             <Th>location</Th>
             <Th>phase</Th>
+            <Th></Th>
             <Th></Th>
           </Tr>
         </Thead>
@@ -51,13 +51,25 @@ const Matches = ({ tournamentId, isAdmin }: Props) => {
               <Td>{match.homeTeamScore}</Td>
               <Td>{match.awayTeam}</Td>
               <Td>{match.awayTeamScore}</Td>
-              <Td>
-                {DateTime.fromJSDate(match.startsAt).toFormat('yyyy-MM-dd HH:mm')} (
-                {DateTime.fromJSDate(match.startsAt).toRelative()})
+              <Td title={DateTime.fromJSDate(match.startsAt).toFormat('yyyy-MM-dd HH:mm')}>
+                {DateTime.fromJSDate(match.startsAt).toRelative()}
               </Td>
-              <Td>{match.status}</Td>
               <Td>{match.location}</Td>
               <Td>{match.phase}</Td>
+              <Td>
+                {isAdmin && (
+                  <Button
+                    isDisabled={delMatch.isLoading}
+                    isLoading={delMatch.isLoading}
+                    onClick={onClickDel(match.id)}
+                    colorScheme="purple"
+                    variant="outline"
+                    size="sm"
+                  >
+                    view
+                  </Button>
+                )}
+              </Td>
               <Td>
                 {isAdmin && (
                   <Button
