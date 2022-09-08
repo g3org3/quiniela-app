@@ -79,7 +79,7 @@ const Race = (_: Props) => {
     drivers.data?.reduce<Record<string, TRPC_Driver>>((_byId, driver) => {
       if (_byId[driver.id]) return _byId
       _byId[driver.id] = driver
-      if (driver.raceTeamId && !teamsById[driver.raceTeamId] && driver.raceteam) {
+      if (driver.raceTeamId && driver.raceteam) {
         teamsById[driver.raceTeamId] = driver.raceteam
         if (!teamsWDriversByTeamId[driver.raceTeamId]) {
           teamsWDriversByTeamId[driver.raceTeamId] = { team: driver.raceteam, drivers: [] }
@@ -183,7 +183,7 @@ const Race = (_: Props) => {
               disabled={upsertBet.isLoading || !isOpen}
               onChange={onChangeFirstDriver}
             >
-              <option value="">choose a driver2</option>
+              <option value="">choose a driver</option>
               {Object.values(teamsWDriversByTeamId).map((t) => (
                 <>
                   <option value="">-- {t.team.name} --</option>
@@ -193,11 +193,6 @@ const Race = (_: Props) => {
                     </option>
                   ))}
                 </>
-              ))}
-              {drivers.data?.map((driver) => (
-                <option key={driver.id} value={driver.id}>
-                  {driver.name}
-                </option>
               ))}
             </Select>
           </Flex>
@@ -265,10 +260,15 @@ const Race = (_: Props) => {
               onChange={onChangeSecondDriver}
             >
               <option value="">choose a driver</option>
-              {drivers.data?.map((driver) => (
-                <option key={driver.id} value={driver.id}>
-                  {driver.name}
-                </option>
+              {Object.values(teamsWDriversByTeamId).map((t) => (
+                <>
+                  <option value="">-- {t.team.name} --</option>
+                  {t.drivers.map((driver) => (
+                    <option key={driver?.id} value={driver?.id}>
+                      {driver?.name}
+                    </option>
+                  ))}
+                </>
               ))}
             </Select>
           </Flex>
@@ -338,10 +338,15 @@ const Race = (_: Props) => {
               onChange={onChangeThirdDriver}
             >
               <option value="">choose a driver</option>
-              {drivers.data?.map((driver) => (
-                <option key={driver.id} value={driver.id}>
-                  {driver.name}
-                </option>
+              {Object.values(teamsWDriversByTeamId).map((t) => (
+                <>
+                  <option value="">-- {t.team.name} --</option>
+                  {t.drivers.map((driver) => (
+                    <option key={driver?.id} value={driver?.id}>
+                      {driver?.name}
+                    </option>
+                  ))}
+                </>
               ))}
             </Select>
           </Flex>

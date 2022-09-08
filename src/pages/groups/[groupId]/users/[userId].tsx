@@ -85,15 +85,15 @@ const UserIdBets = ({ race, raceId, isOpen }: Props) => {
               <Tr key={racebet.id}>
                 <Td>{isOpen ? '******' : racebet.firstPlaceDriver?.name + points1}</Td>
                 <Td bg="gray.100" color="gray.400" borderRight="1px solid #eee">
-                  {isOpen ? '******' : race?.firstPlaceDriver?.name}
+                  {isOpen ? '******' : race?.firstPlaceDriver?.name || '-'}
                 </Td>
                 <Td>{isOpen ? '******' : racebet.secondPlaceDriver?.name + points2}</Td>
                 <Td bg="gray.100" color="gray.400" borderRight="1px solid #eee">
-                  {isOpen ? '******' : race?.secondPlaceDriver?.name}
+                  {isOpen ? '******' : race?.secondPlaceDriver?.name || '-'}
                 </Td>
                 <Td>{isOpen ? '******' : racebet.thirdPlaceDriver?.name + points3}</Td>
                 <Td bg="gray.100" color="gray.400" borderRight="1px solid #eee">
-                  {isOpen ? '******' : race?.thirdPlaceDriver?.name}
+                  {isOpen ? '******' : race?.thirdPlaceDriver?.name || '-'}
                 </Td>
                 <Td>{isOpen ? '******' : points}</Td>
               </Tr>

@@ -19,6 +19,10 @@ interface Props {
 const ViewBets = ({ race, raceId, isOpen }: Props) => {
   const racebets = trpc.useQuery(['racebet.getAllByRaceId', raceId])
 
+  if (racebets.data?.length === 0) {
+    return null
+  }
+
   return (
     <>
       <Heading fontWeight="light">Bets</Heading>
