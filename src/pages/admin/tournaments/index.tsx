@@ -114,7 +114,7 @@ const Tournaments = (_: Props) => {
                   as={CustomLink}
                   variant="outline"
                   colorScheme="purple"
-                  href={`/admin/tournaments/${tournament.id}${tournament.isRace ? '/race' : ''}`}
+                  href={`/admin/tournaments/${tournament.id}${tournament.isRace ? '/races' : ''}`}
                 >
                   View
                 </Button>

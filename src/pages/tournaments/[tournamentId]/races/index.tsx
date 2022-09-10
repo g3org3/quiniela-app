@@ -3,11 +3,7 @@ import { useRouter } from 'next/router'
 
 import Races from 'components/Races'
 
-interface Props {
-  //
-}
-
-const Race = (_: Props) => {
+const Race = () => {
   useSession({ required: true })
   const router = useRouter()
   const tournamentId = router.query.tournamentId as string

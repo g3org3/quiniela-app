@@ -7,8 +7,8 @@ import { trpc } from 'utils/trpc'
 
 const Match = () => {
   const router = useRouter()
-  const [home, setHome] = useState(0)
-  const [away, setAway] = useState(0)
+  const [home, setHome] = useState<string | number>('')
+  const [away, setAway] = useState<string | number>('')
   const toaster = useToast()
   const matchId = router.query.matchId as string
   const match = trpc.useQuery(['match.getOneById', matchId])
@@ -28,17 +28,21 @@ const Match = () => {
   })
 
   const onClickSave = () => {
-    updateBet.mutate({ matchId, home, away })
+    updateBet.mutate({ matchId, home: Number(home), away: Number(away) })
+  }
+  const onChangeHome: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setHome(e.target.value)
+  }
+  const onChangeAway: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setAway(e.target.value)
   }
 
   return (
     <Flex flexDir="column" gap={5}>
       <Heading fontWeight="light">
-        <CustomLink href="/">Tournaments</CustomLink> /{' '}
         <CustomLink href={`/tournaments/${match.data?.Tournament.id}`}>
           {match.data?.Tournament.name}
-        </CustomLink>{' '}
-        / Match
+        </CustomLink>
       </Heading>
       <Button
         isLoading={updateBet.isLoading}
@@ -51,12 +55,12 @@ const Match = () => {
       </Button>
       <Flex justifyContent="center" gap={5}>
         <Flex flexDir="column" alignItems="center" justifyContent="center">
-          <Image alt="logo" h="200px" w="200px" objectFit="cover" src={match.data?.homeTeamImage || ''} />
+          <Image alt="logo" h="100px" w="100px" objectFit="cover" src={match.data?.homeTeamImage || ''} />
           <Text fontSize="xx-large">{match.data?.homeTeam}</Text>
           <Skeleton isLoaded={!bet.isLoading}>
             <Input
               value={home}
-              onChange={(e) => setHome(Number(e.target.value))}
+              onChange={onChangeHome}
               fontSize="4xl"
               isDisabled={updateBet.isLoading}
               textAlign="center"
@@ -69,12 +73,12 @@ const Match = () => {
           <Text fontSize="6xl">vs</Text>
         </Flex>
         <Flex flexDir="column" alignItems="center" justifyContent="center">
-          <Image alt="logo" h="200px" w="200px" objectFit="cover" src={match.data?.awayTeamImage || ''} />
+          <Image alt="logo" h="100px" w="100px" objectFit="cover" src={match.data?.awayTeamImage || ''} />
           <Text fontSize="xx-large">{match.data?.awayTeam}</Text>
           <Skeleton isLoaded={!bet.isLoading}>
             <Input
               value={away}
-              onChange={(e) => setAway(Number(e.target.value))}
+              onChange={onChangeAway}
               fontSize="4xl"
               isDisabled={updateBet.isLoading}
               textAlign="center"

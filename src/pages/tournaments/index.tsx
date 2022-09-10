@@ -83,7 +83,7 @@ const Tournaments: NextPage = () => {
             display="flex"
             flexDir="column"
             h="unset"
-            href={`/tournaments/${tournament.id}${tournament.isRace ? '/race' : ''}`}
+            href={`/tournaments/${tournament.id}${tournament.isRace ? '/races' : ''}`}
             key={tournament.id}
             p="0"
             variant="ghost"

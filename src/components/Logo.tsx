@@ -4,6 +4,6 @@ interface Props {
   //
 }
 
-const Logo = (_: Props) => <Flex h="30px" w="30px" bg="black" borderRadius="10px"></Flex>
+const Logo = (_: Props) => <Flex flexShrink="0" h="30px" w="30px" bg="black" borderRadius="10px"></Flex>
 
 export default Logo

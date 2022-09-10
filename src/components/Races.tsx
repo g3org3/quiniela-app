@@ -32,7 +32,7 @@ const Races = ({ tournamentId }: Props) => {
   return (
     <Flex flexDir="column" gap={4}>
       <Heading fontWeight="light" textTransform="capitalize">
-        <CustomLink href="/">Tournaments</CustomLink> / {tournament.data?.name}
+        {tournament.data?.name}
       </Heading>
       <Flex flexWrap="wrap" gap={5}>
         {races.isLoading && (
@@ -60,7 +60,7 @@ const Races = ({ tournamentId }: Props) => {
               p="0"
               w="unset"
               h="unset"
-              href={`/tournaments/${tournamentId}/race/${race.id}`}
+              href={`/tournaments/${tournamentId}/races/${race.id}`}
               variant="ghost"
               borderTopRadius="10px"
               position="relative"

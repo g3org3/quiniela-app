@@ -19,7 +19,7 @@ const TournamentId = (_: Props) => {
   return (
     <Flex flexDir="column" gap={5}>
       <Heading fontWeight="light" textTransform="capitalize">
-        <CustomLink href="/">Tournaments</CustomLink> / {tournamnet.data?.name}
+        {tournamnet.data?.name}
       </Heading>
       <Matches tournamentId={tournamentId} />
     </Flex>

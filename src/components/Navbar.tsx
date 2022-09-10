@@ -44,8 +44,11 @@ const Navbar = (_: Props) => {
         >
           <Logo />
           <Text>Quiniela</Text>
-          <Badge colorScheme="yellow">beta</Badge>
+          <Badge display={{ base: 'none', md: 'block' }} colorScheme="yellow">
+            beta
+          </Badge>
         </Button>
+
         <Show when={data?.user?.role === 'ADMIN'}>
           <Button
             isActive={isInsideAdmin}
@@ -56,7 +59,7 @@ const Navbar = (_: Props) => {
             display="flex"
             gap={2}
           >
-            <Text>Torneos</Text>
+            <Text>admin</Text>
           </Button>
         </Show>
         <Button borderRadius={0} as={CustomLink} href="/groups" variant="ghost" display="flex" gap={2}>
@@ -76,7 +79,7 @@ const Navbar = (_: Props) => {
               <Avatar name={data?.user?.name || undefined} src={data?.user?.image || undefined} size="sm">
                 {status === 'authenticated' && <AvatarBadge boxSize="1em" bg="green.300" />}
               </Avatar>
-              {data?.user?.name}
+              <Text display={{ base: 'none', md: 'block' }}>{data?.user?.name}</Text>
             </Flex>
           </MenuButton>
           <MenuList>
