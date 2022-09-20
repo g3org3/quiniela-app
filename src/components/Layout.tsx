@@ -15,7 +15,7 @@ const Layout = ({ children }: Props) => {
         <meta name="description" content="Quiniela" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Flex flexDir="column" h="100vh">
+      <Flex as="main" flexDir="column" h="100vh">
         <Navbar />
         <Container maxW="container.xl" flex="1" overflow="auto" pt={5} pb={10}>
           {children}

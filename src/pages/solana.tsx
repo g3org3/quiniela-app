@@ -9,6 +9,7 @@ import {
   Image,
   useToast,
   Spinner,
+  Spacer,
 } from '@chakra-ui/react'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
@@ -55,28 +56,36 @@ const Solana = () => {
   }
 
   return (
-    <Flex flexDir="column" gap={5} alignItems="flex-start">
-      <Heading fontWeight="light" display="flex" gap={2} alignItems="center">
-        <Image
-          height="40px"
-          alt="coin"
-          src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png"
-        />
-        Solana
-        <Text ml={-2} mt={2} alignSelf="flex-start" fontSize="12px">
-          [devnet]
-        </Text>
-        <Badge variant={connected ? 'solid' : 'subtle'} colorScheme={connected ? 'green' : 'red'}>
-          {connected ? 'connected' : 'not connected'}
-        </Badge>
+    <Flex flexDir="column" gap={5} alignItems={{ base: 'unset', md: 'flex-start' }}>
+      <Heading
+        fontWeight="light"
+        display="flex"
+        gap={2}
+        alignItems={{ base: 'center', md: 'center' }}
+        flexDir={{ base: 'column', md: 'row' }}
+      >
+        <Flex alignItems="center" gap={2}>
+          <Image
+            height="40px"
+            alt="coin"
+            src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png"
+          />
+          Solana
+          <Text ml={-2} mt={2} alignSelf="flex-start" fontSize="12px">
+            [devnet]
+          </Text>
+          <Badge variant={connected ? 'solid' : 'subtle'} colorScheme={connected ? 'green' : 'red'}>
+            {connected ? 'connected' : 'not connected'}
+          </Badge>
+        </Flex>
         {wallet && (
-          <Flex ml={10} alignItems="center" gap={2}>
+          <Flex ml={{ base: 0, md: 10 }} alignItems="center" gap={2}>
             <Image h="40px" alt="wallet icon" src={wallet.adapter.icon || undefined} />
             <Text>{wallet.adapter.name}</Text>
           </Flex>
         )}
         <Button
-          ml={10}
+          ml={{ base: 0, md: 10 }}
           onClick={onClick}
           variant={connected ? 'outline' : undefined}
           colorScheme={connected ? 'red' : undefined}

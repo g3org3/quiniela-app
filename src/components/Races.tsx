@@ -13,6 +13,7 @@ interface Props {
 const Races = ({ tournamentId }: Props) => {
   const { prefetchQuery } = trpc.useContext()
   const tournament = trpc.useQuery(['tournament.getOne', tournamentId])
+  const groups = trpc.useQuery(['group.getAllJoined'])
   const races = trpc.useQuery(['race.getAll', tournamentId], {
     onSuccess() {
       prefetchQuery(['racedriver.getAll'])
@@ -31,8 +32,20 @@ const Races = ({ tournamentId }: Props) => {
 
   return (
     <Flex flexDir="column" gap={4}>
-      <Heading fontWeight="light" textTransform="capitalize">
+      <Heading fontWeight="light" textTransform="capitalize" display="flex" alignItems="center">
         {tournament.data?.name}
+        <Spacer />
+        {groups.data && groups.data.length > 0 && (
+          <Button
+            as={CustomLink}
+            href={`/tournaments/${tournamentId}/groups/${groups.data[0]?.groupId}`}
+            size="sm"
+            variant="outline"
+            colorScheme="purple"
+          >
+            view {groups.data[0]?.group.name}&lsquo;s leaderboard
+          </Button>
+        )}
       </Heading>
       <Flex flexWrap="wrap" gap={5}>
         {races.isLoading && (

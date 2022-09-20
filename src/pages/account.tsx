@@ -9,6 +9,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Text,
 } from '@chakra-ui/react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useSession } from 'next-auth/react'
@@ -34,11 +35,18 @@ const Account = (_: Props) => {
           <Flex gap={4} alignItems="center">
             {data.user.name}
           </Flex>
-          <Flex as="small" fontFamily="monospace" fontSize="16px" gap={2} alignItems="center">
+          <Flex
+            as="small"
+            fontFamily="monospace"
+            fontSize="16px"
+            gap={2}
+            alignItems="center"
+            display={{ base: 'none', md: 'flex' }}
+          >
             <IconButton aria-label="copy" size="xs">
               <Icon as={CopyIcon} />
             </IconButton>
-            {data.user.id}
+            <Text>{data.user.id}</Text>
           </Flex>
         </Heading>
       </Flex>

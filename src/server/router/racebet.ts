@@ -1,9 +1,9 @@
-import { RaceBet, RaceDriver, User } from '@prisma/client'
+import { User } from '@prisma/client'
 import { z } from 'zod'
 
 import { getPoints } from 'utils/race'
 
-import { createProtectedRouter, isAdminOrThrow } from './protected-router'
+import { createProtectedRouter } from './protected-router'
 
 export const raceBetRouter = createProtectedRouter()
   .query('getOneByRaceId', {
@@ -38,42 +38,6 @@ export const raceBetRouter = createProtectedRouter()
       })
 
       return data
-    },
-  })
-  .query('getAllByGroupId', {
-    input: z.string(),
-    async resolve({ ctx, input }) {
-      const userGroups = await ctx.prisma.usersOnGroups.findMany({
-        where: { groupId: input },
-        include: { User: true },
-      })
-      const userIds = Array.from(new Set(userGroups.map((g) => g.userId)))
-      const bets = await ctx.prisma.raceBet.findMany({
-        where: { userId: { in: userIds } },
-        include: { firstPlaceDriver: true, secondPlaceDriver: true, thirdPlaceDriver: true, User: true },
-      })
-
-      const raceIds = Array.from(new Set(bets.map((b) => b.raceId)))
-      const races = await ctx.prisma.race.findMany({
-        where: { id: { in: raceIds } },
-        include: { firstPlaceDriver: true, secondPlaceDriver: true, thirdPlaceDriver: true },
-      })
-
-      const leaderboardByUserId: Map<string, User & { points: number }> = new Map()
-      userGroups.forEach((ug) => {
-        leaderboardByUserId.set(ug.userId, { ...ug.User, points: 0 })
-      })
-      bets.forEach((bet) => {
-        const res = leaderboardByUserId.get(bet.userId) || { ...bet.User, points: 0 }
-        const [race] = races.filter((r) => r.id === bet.raceId)
-        if (!race || race.startsAt.getTime() > Date.now()) return
-        res.points = res.points + getPoints(race, bet).points
-        leaderboardByUserId.set(bet.userId, res)
-      })
-
-      return Array.from(leaderboardByUserId.values()).sort((a, b) => {
-        return b.points - a.points
-      })
     },
   })
   .query('getAllByUserId', {

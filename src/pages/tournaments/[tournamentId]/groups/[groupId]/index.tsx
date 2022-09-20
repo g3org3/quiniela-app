@@ -6,14 +6,16 @@ import { trpc } from 'utils/trpc'
 
 const Group = () => {
   const router = useRouter()
-  const groupId = router.query.groupId as string
+  const { groupId, tournamentId } = router.query as { groupId: string; tournamentId: string }
+  const tournament = trpc.useQuery(['tournament.getOne', tournamentId])
   const group = trpc.useQuery(['group.getOne', groupId])
-  const leaderboard = trpc.useQuery(['racebet.getAllByGroupId', groupId])
+  const leaderboard = trpc.useQuery(['bet.getAllByGroupIdAndToId', { groupId, tournamentId }])
 
   return (
     <Flex flexDir="column" gap={5}>
       <Heading fontWeight="light" textTransform="capitalize">
-        <CustomLink href="/groups">Groups</CustomLink> / {group.data?.name} - Bets
+        <CustomLink href={`/tournaments/${tournament.data?.id}`}>{tournament.data?.name}</CustomLink> /{' '}
+        {group.data?.name} - Bets
       </Heading>
       <Table>
         <Thead>
@@ -37,7 +39,10 @@ const Group = () => {
                 </Td>
                 <Td>{lb.points}</Td>
                 <Td>
-                  <Button as={CustomLink} href={`/groups/${groupId}/users/${lb.id}`}>
+                  <Button
+                    as={CustomLink}
+                    href={`/tournaments/${tournament.data?.id}/groups/${groupId}/users/${lb.id}`}
+                  >
                     view bets
                   </Button>
                 </Td>
