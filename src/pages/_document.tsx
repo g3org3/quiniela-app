@@ -24,6 +24,9 @@ export default class Document extends NextDocument {
           <meta name="msapplication-tap-highlight" content="no" />
           <meta name="theme-color" content="#ffffff" />
 
+          <script defer src="https://api.jagc.app/script.js" data-website-id="67d17d73-35a8-4b1b-ba06-8d67be6f9929" />
+          <script defer src="https://api.jagc.app/recorder.js" data-website-id="67d17d73-35a8-4b1b-ba06-8d67be6f9929" />
+
           <link rel="manifest" href="/manifest.json" />
 
           <meta name="twitter:card" content="summary" />
